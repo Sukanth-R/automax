@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Navbar from './components/Navbar';
 import './App.css';
 import Home from './components/HomePage'
@@ -14,11 +14,12 @@ import Side from './components/products/side';
 import Decorative from './components/products/decorative';
 import Contact from './components/contact';
 import About from './components/about';
+
 function App() {
   return (
-    <>
-        <Navbar/>
-          <Routes>
+    <BrowserRouter basename="/automax">
+      <Navbar/>
+        <Routes>
           <Route path="/" element={<Home/>}/>
           <Route path="/components/products/water" element={<Water/>}/>
           <Route path="/components/products/boat" element={<Boat/>}/>
@@ -31,9 +32,9 @@ function App() {
           <Route path="/components/products/decorative" element={<Decorative/>}/>
           <Route path="/components/contact" element={<Contact/>}/>
           <Route path="/components/about" element={<About/>}/>
-          </Routes>
-        <Footer/>
-    </>
+        </Routes>
+      <Footer/>
+    </BrowserRouter>
   );
 }
 
