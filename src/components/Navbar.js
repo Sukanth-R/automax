@@ -31,7 +31,7 @@ const Navbar = () => {
           </div>
           <div className="hidden md:flex space-x-6 gap-4 items-center text-lg me-5">
             <Link 
-              to="/" 
+              to="automax/" 
               className={`hover:text-gray-300 transition duration-300 ${isActive("/") ? "text-gray-300" : ""}`}
             >
               Home
@@ -149,7 +149,7 @@ const Navbar = () => {
       >
         <div className="p-4 space-y-2">
           <Link 
-            to="/" 
+            to="automax/" 
             className={`block py-3 px-4 text-lg hover:text-gray-300 hover:bg-[#133E87] transition duration-300 rounded-md ${
               isActive("/") ? "text-gray-300 bg-[#133E87]" : ""
             }`}
