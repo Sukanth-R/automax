@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/automax/static/css/main.536edb89.css",
+    "main.js": "/automax/static/js/main.58b122dd.js",
+    "static/js/488.c0860a0c.chunk.js": "/automax/static/js/488.c0860a0c.chunk.js",
+    "index.html": "/automax/index.html",
+    "main.536edb89.css.map": "/automax/static/css/main.536edb89.css.map",
+    "main.58b122dd.js.map": "/automax/static/js/main.58b122dd.js.map",
+    "488.c0860a0c.chunk.js.map": "/automax/static/js/488.c0860a0c.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.536edb89.css",
+    "static/js/main.58b122dd.js"
+  ]
+}
