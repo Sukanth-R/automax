@@ -1,6 +1,7 @@
 {
   "name": "ksp_yarns",
   "version": "0.1.0",
+  "homepage": "https://Sukanth-R.github.io/automax",
   "private": true,
   "dependencies": {
     "@radix-ui/react-label": "^2.1.1",
@@ -8,6 +9,7 @@
     "axios": "^1.7.9",
     "cra-template": "1.2.0",
     "framer-motion": "^6.5.1",
+    "google-translate-api-x": "^10.7.2",
     "lucide-react": "^0.469.0",
     "mongoose": "^8.9.3",
     "next": "^15.1.6",
@@ -28,7 +30,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [

@@ -1,44 +1,40 @@
-import React from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import ParentPage from "./components/ParentPage";
-import HomePage from "./components/HomePage";
-import Event from "./Event";
-import Placementlogo from "./Placementlogo";
-import AchievementsCarousel from "./AchievementsCarousel";
-import "./index.css";
-import ITHome from "./components/departments/itdep/ithome"; // Correct path to IT component
-import Facility from "./components/departments/itdep/facility_lib"; // Correct path to Facility component
-import High from "./components/departments/itdep/ithigh"; // Correct path to Highlights component
-import Faculty from "./components/departments/itdep/itfac";
-import Patent from "./components/departments/itdep/itpat";
-
-export default function App() {
-  const location = useLocation(); // Get the current route path
+import { Route, Routes } from "react-router-dom";
+import Navbar from './components/Navbar';
+import './App.css';
+import Home from './components/HomePage'
+import Footer from './components/Footer'
+import Water from './components/products/water';
+import Boat from './components/products/boat';
+import Fog from './components/products/fog';
+import Twowheeler from './components/products/twowheeler';
+import Converters from './components/products/converters';
+import Roof from './components/products/roof';
+import Tail from './components/products/tail';
+import Side from './components/products/side';
+import Decorative from './components/products/decorative';
+import Contact from './components/contact';
+import About from './components/about';
+function App() {
   return (
     <>
-      <Navbar /> {/* Include Navbar on all pages */}
-      <Routes>
-        {/* Route for Home Page */}
-        <Route path="/" element={<HomePage />} />
-
-        {/* Route for Parent Page */}
-        <Route path="/parent" element={<ParentPage />} />
-        <Route path="/departments/itdep/ithome" element={<ITHome />} />
-        <Route path="/departments/itdep/facility_lib" element={<Facility />} />
-        <Route path="/departments/itdep/ithigh" element={<High />} />
-        <Route path="/departments/itdep/itfac" element={<Faculty />} />
-        <Route path="/departments/itdep/itpat" element={<Patent />} />
-      </Routes>
-
-      {/* Show Event and Placementlogo only on HomePage */}
-      {location.pathname === "/" && (
-        <>
-          <AchievementsCarousel />
-          <Event />
-          <Placementlogo />
-        </>
-      )}
+        <Navbar/>
+          <Routes>
+          <Route path="/" element={<Home/>}/>
+          <Route path="/components/products/water" element={<Water/>}/>
+          <Route path="/components/products/boat" element={<Boat/>}/>
+          <Route path="/components/products/fog" element={<Fog/>}/>
+          <Route path="/components/products/twowheeler" element={<Twowheeler/>}/>
+          <Route path="/components/products/converters" element={<Converters/>}/>
+          <Route path="/components/products/roof" element={<Roof/>}/>
+          <Route path="/components/products/tail" element={<Tail/>}/>
+          <Route path="/components/products/side" element={<Side/>}/>
+          <Route path="/components/products/decorative" element={<Decorative/>}/>
+          <Route path="/components/contact" element={<Contact/>}/>
+          <Route path="/components/about" element={<About/>}/>
+          </Routes>
+        <Footer/>
     </>
   );
 }
+
+export default App;
