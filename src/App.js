@@ -1,8 +1,15 @@
-import { Route, Routes, Navigate } from "react-router-dom";
+import { useEffect } from 'react';
+import { 
+  BrowserRouter, 
+  HashRouter, 
+  Routes, 
+  Route, 
+  Navigate,
+  useNavigate
+} from 'react-router-dom';
 import Navbar from './components/Navbar';
-import './App.css';
-import Home from './components/HomePage';
 import Footer from './components/Footer';
+import Home from './components/HomePage';
 import Water from './components/products/water';
 import Boat from './components/products/boat';
 import Fog from './components/products/fog';
@@ -14,8 +21,22 @@ import Side from './components/products/side';
 import Decorative from './components/products/decorative';
 import Contact from './components/contact';
 import About from './components/about';
+import NotFound from './components/NotFound';
+import './App.css';
 
-function App() {
+// Main App Component
+function AppContent() {
+  const navigate = useNavigate();
+  const isGitHubPages = window.location.host.includes('github.io');
+
+  // Handle GitHub Pages 404 redirect
+  useEffect(() => {
+    if (isGitHubPages && window.location.hash.includes('#/')) {
+      const path = window.location.hash.replace('#', '');
+      navigate(path);
+    }
+  }, [navigate, isGitHubPages]);
+
   return (
     <div className="app">
       <Navbar />
@@ -24,7 +45,6 @@ function App() {
           {/* Redirects */}
           <Route path="/" element={<Navigate to="/home" replace />} />
           <Route path="/automax" element={<Navigate to="/home" replace />} />
-          <Route path="/components" element={<Navigate to="/home" replace />} />
           
           {/* Main Routes */}
           <Route path="/home" element={<Home />} />
@@ -43,7 +63,7 @@ function App() {
           <Route path="/products/decorative" element={<Decorative />} />
           
           {/* Catch-all route */}
-          <Route path="*" element={<Navigate to="/home" replace />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
       <Footer />
@@ -51,4 +71,19 @@ function App() {
   );
 }
 
-export default App;
+// Router Wrapper Component
+function AppWrapper() {
+  const isGitHubPages = window.location.host.includes('github.io');
+
+  return isGitHubPages ? (
+    <HashRouter basename="/automax">
+      <AppContent />
+    </HashRouter>
+  ) : (
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
+  );
+}
+
+export default AppWrapper;
