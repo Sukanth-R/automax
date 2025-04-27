@@ -1,13 +1,26 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Menu, X, ChevronDown, Search } from "lucide-react";
 import { FaPhone, FaEnvelope, FaFacebook, FaInstagram, FaTwitter, FaLinkedin } from "react-icons/fa";
-import '../index.css';
+import "../index.css";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -19,26 +32,167 @@ const Navbar = () => {
     setIsOpen(false);
   };
 
-  const isActive = (path) => location.pathname === path;
+  const toggleSearch = () => {
+    setSearchOpen(!searchOpen);
+  };
+
+  const handleLogoClick = () => {
+    navigate("/home");
+    closeMobileMenu();
+  };
+
+  const isActive = (path) => {
+    return location.pathname === path || 
+           (path === "/home" && location.pathname === "/");
+  };
+
+  const productLinks = [
+    { path: "/products/water", label: "Water Proof LED Lights" },
+    { path: "/products/boat", label: "Boat Lights" },
+    { path: "/products/fog", label: "Fog Lights" },
+    { path: "/products/twowheeler", label: "Two Wheeler Lights" },
+    { path: "/products/converters", label: "Converters" },
+    { path: "/products/roof", label: "Roof Lamps" },
+    { path: "/products/tail", label: "Tail Lamp Assembly" },
+    { path: "/products/side", label: "Side Indicators" },
+    { path: "/products/decorative", label: "Decorative Lights" },
+  ];
 
   return (
     <>
-      {/* Navbar */}
-      <nav className="bg-[#01013F] text-white p-4 md:sticky md:top-0 md:z-50 shadow-lg">
-        <div className="container mx-auto flex justify-between items-center">
-          <div className="text-4xl ms-5 font-bold pb-1 transition duration-300">
-            AUTOMAX
+      {/* First Navbar (Logo, Search, Contact, Social Media) */}
+      <nav className="bg-white text-black p-4 md:sticky md:top-0 md:z-50 border-b border-gray-200">
+        <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
+          {/* Logo - Left aligned */}
+          <div className="text-3xl font-bold cursor-pointer" onClick={handleLogoClick}>
+            <span className="text-red-500">AUTOMAX</span>
           </div>
-          <div className="hidden md:flex space-x-6 gap-4 items-center text-lg me-5">
-            <Link 
-              to="automax/" 
-              className={`hover:text-gray-300 transition duration-300 ${isActive("/") ? "text-gray-300" : ""}`}
+
+          {/* Search Bar (Visible on Desktop) */}
+          <div className="hidden md:flex flex-1 mx-8 max-w-2xl">
+            <div className="relative w-full">
+              <input
+                type="text"
+                placeholder="Search Products"
+                className="w-full p-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500"
+              />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} />
+            </div>
+          </div>
+
+          {/* Contact & Social Media (Desktop) */}
+          <div className="hidden md:flex items-center space-x-6 text-sm">
+            <div className="flex items-center space-x-6">
+              <a
+                href="tel:+918825967397"
+                className="flex items-center hover:text-red-700 transition duration-300"
+              >
+                <FaPhone style={{ transform: "rotate(90deg)" }} className="text-red-500 mr-2" size={16} />
+                +91 88259 67397
+              </a>
+              <a
+                href="mailto:vivekautomax@gmail.com"
+                className="flex items-center hover:text-red-700 transition duration-300"
+              >
+                <FaEnvelope className="text-red-500 mr-2" size={16} />
+                vivekautomax@gmail.com
+              </a>
+            </div>
+            <div className="flex items-center space-x-4 ml-2">
+              <span className="text-gray-600">Follow Us:</span>
+              <div className="flex space-x-3">
+                <a
+                  href="https://facebook.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-red-500 hover:text-red-700 transition duration-300"
+                >
+                  <FaFacebook size={18} />
+                </a>
+                <a
+                  href="https://instagram.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-red-500 hover:text-red-700 transition duration-300"
+                >
+                  <FaInstagram size={18} />
+                </a>
+                <a
+                  href="https://twitter.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-red-500 hover:text-red-700 transition duration-300"
+                >
+                  <FaTwitter size={18} />
+                </a>
+                <a
+                  href="https://linkedin.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-red-500 hover:text-red-700 transition duration-300"
+                >
+                  <FaLinkedin size={18} />
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile Icons (Search, Menu) - Right aligned */}
+          <div className="md:hidden flex items-center space-x-4 ml-auto">
+            <button
+              className="p-2 rounded-lg hover:bg-gray-200 transition duration-300"
+              onClick={toggleSearch}
+              aria-label="Search"
+            >
+              <Search size={24} />
+            </button>
+            <button
+              className="p-2 rounded-lg hover:bg-gray-200 transition duration-300"
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label="Menu"
+            >
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* Mobile Search Bar (Toggles when search icon clicked) */}
+      <div
+        className={`md:hidden transition-all duration-300 overflow-hidden bg-white z-50 relative ${
+          searchOpen ? "max-h-20 py-3" : "max-h-0"
+        }`}
+        aria-hidden={!searchOpen}
+      >
+        <div className="container mx-auto px-4">
+          <div className="relative w-full">
+            <input
+              type="text"
+              placeholder="Search Products"
+              className="w-full p-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500"
+            />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} />
+          </div>
+        </div>
+      </div>
+
+      {/* Second Navbar (Navigation Links) - Hidden on Mobile */}
+      <nav className="hidden md:block bg-white text-black py-3 sticky top-[72px] z-40 border-b border-gray-200 shadow-sm">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="flex items-center space-x-8">
+            <Link
+              to="/home"
+              className={`hover:text-red-600 transition duration-300 ${
+                isActive("/home") ? "text-red-600 font-medium" : ""
+              }`}
             >
               Home
             </Link>
-            <Link 
-              to="/components/about" 
-              className={`hover:text-gray-300 transition duration-300 ${isActive("/about") ? "text-gray-300" : ""}`}
+            <Link
+              to="/about"
+              className={`hover:text-red-600 transition duration-300 ${
+                isActive("/about") ? "text-red-600 font-medium" : ""
+              }`}
             >
               About
             </Link>
@@ -47,162 +201,105 @@ const Navbar = () => {
               onMouseEnter={() => setDropdownOpen(true)}
               onMouseLeave={() => setDropdownOpen(false)}
             >
-              <button 
-                className={`flex items-center hover:text-gray-300 transition duration-300 ${
-                  location.pathname.startsWith("/components/products") ? "text-gray-300" : ""
+              <button
+                className={`flex items-center hover:text-red-600 transition duration-300 ${
+                  location.pathname.startsWith("/products") ? "text-red-600 font-medium" : ""
                 }`}
+                aria-expanded={dropdownOpen}
+                aria-haspopup="true"
               >
                 Products <ChevronDown size={16} className="ml-1" />
               </button>
               <div
-                className={`absolute z-50 bg-[#CBDCEB] text-sm text-black rounded-lg shadow-lg w-48 transition-all duration-300 ease-in-out ${
+                className={`absolute z-50 bg-white text-sm text-black rounded-lg shadow-lg w-48 transition-all duration-300 ease-in-out ${
                   dropdownOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"
                 }`}
+                role="menu"
               >
-                {[
-                  { path: "/components/products/water", label: "Water Proof LED Lights" },
-                  { path: "/components/products/boat", label: "Boat Lights" },
-                  { path: "/components/products/fog", label: "Fog Lights" },
-                  { path: "/components/products/twowheeler", label: "Two Wheeler Lights" },
-                  { path: "/components/products/converters", label: "Converters" },
-                  { path: "/components/products/roof", label: "Roof Lamps" },
-                  { path: "/components/products/tail", label: "Tail Lamp Assembly" },
-                  { path: "/components/products/side", label: "Side Indicators" },
-                  { path: "/components/products/decorative", label: "Decorative Lights" },
-                ].map((item) => (
+                {productLinks.map((item) => (
                   <Link
                     key={item.path}
                     to={item.path}
-                    className={`block px-4 py-2 hover:bg-[#133E87] hover:text-white transition duration-300 ${
-                      isActive(item.path) ? "bg-[#133E87] text-white" : ""
+                    className={`block px-4 py-2 hover:bg-gray-100 hover:text-red-600 transition duration-300 ${
+                      isActive(item.path) ? "bg-gray-100 text-red-600" : ""
                     }`}
+                    role="menuitem"
                   >
                     {item.label}
                   </Link>
                 ))}
               </div>
             </div>
-            <Link 
-              to="/gallery" 
-              className={`hover:text-gray-300 transition duration-300 ${isActive("/gallery") ? "text-gray-300" : ""}`}
-            >
-              Gallery
-            </Link>
-            <Link 
-              to="/components/contact" 
-              className={`hover:text-gray-300 transition duration-300 ${isActive("/components/contact") ? "text-gray-300" : ""}`}
+            <Link
+              to="/contact"
+              className={`hover:text-red-600 transition duration-300 ${
+                isActive("/contact") ? "text-red-600 font-medium" : ""
+              }`}
             >
               Contact Us
             </Link>
           </div>
-          <button 
-            className="md:hidden p-2 rounded-lg hover:bg-[#CBDCEB] hover:text-[#133E87] transition duration-300" 
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
         </div>
       </nav>
 
-      {/* Contact & Social Media Section (Desktop) */}
-      <div className="hidden md:block bg-gray-200 text-gray-800 p-3 shadow-md">
-        <div className="container mx-auto flex justify-between items-center">
-          <div className="flex items-center space-x-6">
-            <a 
-              href="tel:+918825967397" 
-              className="flex items-center ms-5 hover:text-gray-600 transition duration-300"
-            >
-              <FaPhone style={{ transform: "rotate(90deg)" }} className="text-black mr-2" /> +918825967397
-            </a>
-            <a 
-              href="mailto:vivekautomax@gmail.com" 
-              className="flex items-center hover:text-gray-600 transition duration-300"
-            >
-              <FaEnvelope className="text-black mr-2" /> vivekautomax@gmail.com
-            </a>
-          </div>
-          <div className="flex space-x-4 mr-5">
-            <p className="text-lg">Follow Us:</p>
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-700 transition duration-300">
-              <FaFacebook size={24} />
-            </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-pink-500 hover:text-pink-700 transition duration-300">
-              <FaInstagram size={24} />
-            </a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-600 transition duration-300">
-              <FaTwitter size={24} />
-            </a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:text-blue-900 transition duration-300">
-              <FaLinkedin size={24} />
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Menu */}
+      {/* Mobile Sidebar Menu */}
       <div
-        className={`md:hidden bg-[#01013F] text-white transition-all duration-300 ease-in-out ${
-          isOpen 
-            ? "max-h-[1100px] opacity-100" 
-            : "max-h-0 opacity-0 overflow-hidden"
+        className={`md:hidden fixed inset-y-0 left-0 z-50 bg-white w-72 transition-transform duration-300 ease-in-out ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
+        style={{ top: "72px", height: "calc(100vh - 72px)" }}
+        aria-hidden={!isOpen}
       >
-        <div className="p-4 space-y-2">
-          <Link 
-            to="automax/" 
-            className={`block py-3 px-4 text-lg hover:text-gray-300 hover:bg-[#133E87] transition duration-300 rounded-md ${
-              isActive("/") ? "text-gray-300 bg-[#133E87]" : ""
+        <div className="h-full overflow-y-auto px-4 pb-4 space-y-2 pt-4">
+          <Link
+            to="/home"
+            className={`block py-3 px-4 text-base hover:bg-gray-100 transition duration-300 rounded-md ${
+              isActive("/home") ? "bg-gray-100 text-red-600 font-medium" : ""
             }`}
             onClick={closeMobileMenu}
           >
             Home
           </Link>
-          <Link 
-            to="/components/about" 
-            className={`block py-3 px-4 text-lg hover:text-gray-300 hover:bg-[#133E87] transition duration-300 rounded-md ${
-              isActive("/about") ? "text-gray-300 bg-[#133E87]" : ""
+          <Link
+            to="/about"
+            className={`block py-3 px-4 text-base hover:bg-gray-100 transition duration-300 rounded-md ${
+              isActive("/about") ? "bg-gray-100 text-red-600 font-medium" : ""
             }`}
             onClick={closeMobileMenu}
           >
             About
           </Link>
-          
+
           {/* Products Dropdown */}
           <div className="relative">
-            <button 
-              onClick={() => setDropdownOpen(!dropdownOpen)} 
-              className={`flex items-center w-full text-white text-left py-3 px-4 text-lg hover:text-gray-300 hover:bg-[#133E87] transition duration-300 rounded-md ${
-                location.pathname.startsWith("/components/products") ? "text-gray-300 bg-[#133E87]" : ""
+            <button
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              className={`flex items-center w-full text-black text-left py-3 px-4 text-base hover:bg-gray-100 transition duration-300 rounded-md ${
+                location.pathname.startsWith("/products") ? "bg-gray-100 text-red-600 font-medium" : ""
               }`}
+              aria-expanded={dropdownOpen}
+              aria-haspopup="true"
             >
               Products <ChevronDown size={16} className="ml-1" />
             </button>
             <div
-              className={`w-full bg-white text-[#01013F] rounded-lg shadow-lg transition-all duration-300 ease-in-out ${
-                dropdownOpen 
-                  ? "max-h-[600px] opacity-100" 
+              className={`w-full bg-white text-black rounded-lg transition-all duration-300 ease-in-out ${
+                dropdownOpen
+                  ? "max-h-[600px] opacity-100 mt-2"
                   : "max-h-0 opacity-0 overflow-hidden"
               }`}
+              role="menu"
             >
               <div className="p-2 space-y-2">
-                {[
-                  { path: "/components/products/water", label: "Water Proof LED Lights" },
-                  { path: "/components/products/boat", label: "Boat Lights" },
-                  { path: "/components/products/fog", label: "Fog Lights" },
-                  { path: "/components/products/twowheeler", label: "Two Wheeler Lights" },
-                  { path: "/components/products/converters", label: "Converters" },
-                  { path: "/components/products/roof", label: "Roof Lamps" },
-                  { path: "/components/products/tail", label: "Tail Lamp Assembly" },
-                  { path: "/components/products/side", label: "Side Indicators" },
-                  { path: "/components/products/decorative", label: "Decorative Lights" },
-                ].map((item) => (
+                {productLinks.map((item) => (
                   <Link
                     key={item.path}
                     to={item.path}
-                    className={`block py-3 px-4 text-base hover:bg-[#133E87] hover:text-white transition duration-300 rounded-md ${
-                      isActive(item.path) ? "bg-[#133E87] text-white" : ""
+                    className={`block px-4 py-2 hover:bg-gray-100 hover:text-red-600 transition duration-300 ${
+                      isActive(item.path) ? "bg-gray-100 text-red-600" : ""
                     }`}
                     onClick={closeMobileMenu}
+                    role="menuitem"
                   >
                     {item.label}
                   </Link>
@@ -211,53 +308,78 @@ const Navbar = () => {
             </div>
           </div>
 
-          <Link 
-            to="/gallery" 
-            className={`block py-3 px-4 text-lg hover:text-gray-300 hover:bg-[#133E87] transition duration-300 rounded-md ${
-              isActive("/gallery") ? "text-gray-300 bg-[#133E87]" : ""
-            }`}
-            onClick={closeMobileMenu}
-          >
-            Gallery
-          </Link>
-          <Link 
-            to="/components/contact" 
-            className={`block py-3 px-4 text-lg hover:text-gray-300 hover:bg-[#133E87] transition duration-300 rounded-md ${
-              isActive("/components/contact") ? "text-gray-300 bg-[#133E87]" : ""
+          <Link
+            to="/contact"
+            className={`block py-3 px-4 text-base hover:bg-gray-100 transition duration-300 rounded-md ${
+              isActive("/contact") ? "bg-gray-100 text-red-600 font-medium" : ""
             }`}
             onClick={closeMobileMenu}
           >
             Contact Us
           </Link>
-          
-          {/* Contact & Social Media Section (Mobile) */}
-          <div className="mt-4 border-t border-gray-400 pt-4">
-            <a 
-              href="tel:+918825967397" 
-              className="flex items-center py-3 px-4 hover:text-gray-300 transition duration-300"
-            >
-              <FaPhone style={{ transform: "rotate(90deg)" }} className="text-white mr-2" /> +918825967397
-            </a>
-            <a 
-              href="mailto:vivekautomax@gmail.com" 
-              className="flex items-center py-3 px-4 hover:text-gray-300 transition duration-300"
-            >
-              <FaEnvelope className="text-white mr-2" /> vivekautomax@gmail.com
-            </a>
-            <div className="flex flex-wrap space-x-4 mt-2 p-4">
-              <p className="text-lg mt-3">Follow Us:</p>
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-700 transition duration-300 py-2 pe-1">
-                <FaFacebook size={34} />
+
+          {/* Contact Information Section (Mobile) */}
+          <div className="mt-4 border-t border-gray-300 pt-4">
+            <div className="space-y-3">
+              <a
+                href="tel:+918825967397"
+                className="flex items-center px-4 py-3 bg-gray-100 rounded-lg text-base"
+                onClick={closeMobileMenu}
+              >
+                <FaPhone style={{ transform: "rotate(90deg)" }} className="text-red-500 mr-3" size={18} />
+                Call Us: +91 88259 67397
               </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-pink-500 hover:text-pink-700 transition duration-300 py-2 pe-1">
-                <FaInstagram size={34} />
+              <a
+                href="mailto:vivekautomax@gmail.com"
+                className="flex items-center px-4 py-3 bg-gray-100 rounded-lg text-base"
+                onClick={closeMobileMenu}
+              >
+                <FaEnvelope className="text-red-500 mr-3" size={18} />
+                Email: vivekautomax@gmail.com
               </a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-600 transition duration-300 py-2 pe-1">
-                <FaTwitter size={34} />
-              </a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:text-blue-900 transition duration-300 py-2 pe-1">
-                <FaLinkedin size={34} />
-              </a>
+            </div>
+
+            {/* Social Media Section (Mobile) */}
+            <div className="flex items-center mt-4 px-4 py-2">
+              <p className="text-base mr-3">Follow Us:</p>
+              <div className="flex space-x-4">
+                <a
+                  href="https://facebook.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-red-500 hover:text-red-700 transition duration-300"
+                  aria-label="Facebook"
+                >
+                  <FaFacebook size={20} />
+                </a>
+                <a
+                  href="https://instagram.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-red-500 hover:text-red-700 transition duration-300"
+                  aria-label="Instagram"
+                >
+                  <FaInstagram size={20} />
+                </a>
+                <a
+                  href="https://twitter.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-red-500 hover:text-red-700 transition duration-300"
+                  aria-label="Twitter"
+                >
+                  <FaTwitter size={20} />
+                </a>
+                <a
+                  href="https://linkedin.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-red-500 hover:text-red-700 transition duration-300"
+                  aria-label="LinkedIn"
+                >
+                  <FaLinkedin size={20} />
+                </a>
+              </div>
             </div>
           </div>
         </div>

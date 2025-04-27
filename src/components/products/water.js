@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Filter, X, ChevronLeft, ChevronRight, Home, Languages } from 'lucide-react';
+import { Filter, X, ChevronLeft, ChevronRight,Search, Home } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const WaterproofLEDLight = () => {
@@ -13,32 +13,6 @@ const WaterproofLEDLight = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [currentCarousel, setCurrentCarousel] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
-  const [translationError, setTranslationError] = useState(null);
-  
-  // Translation states
-  const [sourceLang] = useState("en");
-  const [targetLang, setTargetLang] = useState("en");
-  const [originalText] = useState({
-    title: "WATERPROOF LED LIGHTS",
-    description: "Astra Waterproof LED Lights combine durability with modern lighting solutions. Perfect for outdoor spaces, bathrooms, or kitchens, they provide reliable illumination while withstanding moisture and harsh conditions. Explore our collection to find waterproof LED lights that meet your needs.",
-    filtersTitle: "Filters",
-    voltageTitle: "Voltage",
-    colorTitle: "Color",
-    allVolts: "All Volts",
-    allColors: "All Colors",
-    showingText: "Showing {count} out of {total} products",
-    searchPlaceholder: "Search by name or part number...",
-    showFilters: "Show Filters",
-    hideFilters: "Hide Filters",
-    pageText: "Page {current} of {total}",
-    partNoText: "Part No:",
-    voltText: "Volt:",
-    colorText: "Color:",
-    homeText: "Home"
-  });
-  const [translatedText, setTranslatedText] = useState({});
-  const [isTranslating, setIsTranslating] = useState(false);
-  const [translationCache, setTranslationCache] = useState({});
 
   // Check if mobile
   useEffect(() => {
@@ -72,111 +46,6 @@ const WaterproofLEDLight = () => {
     window.scrollTo(0, 0);
     fetchProducts();
   }, []);
-
-  // Safe text handling with replacements
-  const getText = (key, replacements = {}) => {
-    try {
-      let text = String(translatedText[key] || originalText[key] || "");
-      Object.entries(replacements).forEach(([k, v]) => {
-        text = text.replace(new RegExp(`\\{${k}\\}`, 'g'), String(v));
-      });
-      return text;
-    } catch (error) {
-      console.error("Text processing error:", error);
-      return "";
-    }
-  };
-
-  // Translation handler with timeout
-  const handleTranslate = useCallback(async () => {
-    // Don't proceed if already translating or target is English
-    if (isTranslating || targetLang === "en") {
-      if (targetLang === "en") {
-        setTranslatedText({});
-        setTranslationError(null);
-      }
-      return;
-    }
-  
-    setIsTranslating(true);
-    setTranslationError(null);
-    
-    // Create new AbortController for this request
-    const controller = new AbortController();
-    const timeoutDuration = 15000; // 15 seconds timeout
-    
-    // Set timeout to abort the request
-    const timeoutId = setTimeout(() => {
-      controller.abort();
-    }, timeoutDuration);
-  
-    try {
-      const newTranslatedText = {};
-      const textsToTranslate = [];
-      const newCache = { ...translationCache };
-      
-      // Prepare texts to translate (only uncached)
-      Object.entries(originalText).forEach(([key, text]) => {
-        const cacheKey = `${targetLang}-${key}`;
-        if (translationCache[cacheKey]) {
-          newTranslatedText[key] = translationCache[cacheKey];
-        } else {
-          textsToTranslate.push({ key, text: String(text) });
-        }
-      });
-  
-      // Only make API call if there are texts to translate
-      if (textsToTranslate.length > 0) {
-        const response = await fetch("https://translator-0dye.onrender.com/translate/batch", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            texts: textsToTranslate.map(t => t.text),
-            from: sourceLang,
-            to: targetLang,
-          }),
-          signal: controller.signal
-        });
-  
-        // Handle HTTP errors
-        if (!response.ok) {
-          throw new Error(`Translation failed: ${response.statusText}`);
-        }
-  
-        const data = await response.json();
-        
-        // Handle API errors
-        if (!data.success) {
-          throw new Error(data.error || "Translation service error");
-        }
-  
-        // Process successful translation
-        data.translatedTexts.forEach((translated, i) => {
-          const { key } = textsToTranslate[i];
-          const cacheKey = `${targetLang}-${key}`;
-          const safeText = String(translated || textsToTranslate[i].text);
-          newTranslatedText[key] = safeText;
-          newCache[cacheKey] = safeText;
-        });
-  
-        setTranslationCache(newCache);
-      }
-  
-      setTranslatedText(newTranslatedText);
-    } catch (error) {
-      console.error("Translation error:", error);
-      
-      // Differentiate between timeout and other errors
-      if (error.name === 'AbortError') {
-        setTranslationError("Translation took too long. Please try again.");
-      } else {
-        setTranslationError(error.message || "Translation failed. Please try again later.");
-      }
-    } finally {
-      clearTimeout(timeoutId);
-      setIsTranslating(false);
-    }
-  }, [targetLang, sourceLang, originalText, translationCache, isTranslating]);
 
   // Filter and display logic
   const uniqueColors = [...new Set(products.map(p => p.color))].filter(Boolean);
@@ -232,111 +101,36 @@ const WaterproofLEDLight = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-gray-100 flex flex-col">
       {/* Hero Section */}
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1 }}
-        className="relative w-full h-64 sm:h-80 md:h-96 overflow-hidden"
-      >
-        <img
-          src="https://t3.ftcdn.net/jpg/09/85/53/02/240_F_985530270_SgZsAuSMfXttrmIvPtbGU85hYBxygx6I.jpg"
-          alt="Waterproof LED Lights Banner"
-          className="w-full h-full object-cover transform transition-transform duration-1000 hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-900/70 to-transparent flex items-center justify-center">
-          <motion.h1
-            initial={{ y: -50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.5, duration: 0.8 }}
-            className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-center px-4 drop-shadow-lg"
-          >
-            {getText("title")}
-          </motion.h1>
-        </div>
-      </motion.div>
-
-      {/* Logo and Translation Section */}
-      <div className="w-full bg-white">
-        <section className="px-6 lg:px-20 py-8 sm:py-12 flex flex-col md:flex-row items-center justify-center gap-4 sm:gap-8">
-          <div className="flex-shrink-0 w-32 sm:w-40 md:w-48 flex justify-center">
-            <img src="/images/logo.png" alt="Logo" className="w-full h-auto object-contain rounded-lg" />
-          </div>
-          <div className="w-full sm:w-auto flex justify-center">
-            <h3 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[100px] font-extrabold text-red-700" style={{ fontFamily: "Georgia, sans-serif", fontStyle: "italic" }}>
-              ASTRA
-            </h3>
-          </div>
-        </section>
-
-        {/* Translation Controls */}
-        <div className="w-full px-6 pb-4 flex flex-col items-center gap-2">
-          <div className="flex items-center gap-4">
-            <select
-              value={targetLang}
-              onChange={(e) => setTargetLang(e.target.value)}
-              className="border border-gray-300 px-4 py-2 rounded-md text-sm"
-              disabled={isTranslating}
-            >
-              <option value="en">English</option>
-              <option value="ta">Tamil</option>
-              <option value="hi">Hindi</option>
-              <option value="kn">Kannada</option>
-              <option value="te">Telugu</option>
-              <option value="ml">Malayalam</option>
-            </select>
-            
-            <button
-              onClick={handleTranslate}
-              disabled={isTranslating}
-              className="bg-blue-900 text-white px-4 py-2 rounded-md hover:bg-blue-800 transition flex items-center justify-center gap-2 text-sm relative min-w-[100px]"
-            >
-              {isTranslating ? (
-                <motion.div
-                  className="absolute inset-0 flex items-center justify-center"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                >
-                  <motion.div
-                    className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
-                    animate={{ rotate: 360 }}
-                    transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
-                  />
-                </motion.div>
-              ) : (
-                <>
-                  <Languages className="h-4 w-4" />
-                  <span>Translate</span>
-                </>
-              )}
-            </button>
-          </div>
-          
-          {translationError && (
-            <p className="text-red-500 text-sm">{translationError}</p>
-          )}
-        </div>
-      </div>
-
-      {/* Navigation and Description Section */}
-      <section className="w-full bg-white px-4 sm:px-6 lg:px-20 py-6 sm:py-8">
-        <div className="max-w-8xl mx-auto flex flex-col sm:flex-row items-start gap-4 sm:gap-8">
-          <div className="flex items-center gap-2">
+      <section className="w-full px-4 sm:px-6 lg:px-20 py-12 text-black bg-gray-300">
+        <div className="container mx-auto">
+          <div className="flex flex-col lg:flex-row lg:space-x-8">
+            <div className="lg:w-1/3 mb-8 lg:mb-0">
+              <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-red-600">AUTOMAX</h2>
+              <p className="text-sm uppercase text-gray-800 mb-2">MANUFACTURING | MARKETING </p>
+              <div className="w-16 h-1 bg-orange-400 mb-6"></div>
+              <div className="flex items-center gap-2">
             <button 
               onClick={() => navigate('/')} 
               className="flex items-center gap-1 text-gray-700 hover:text-blue-600 transition-colors"
             >
               <Home className="h-5 w-5" />
-              <span className="text-lg font-medium">{getText("homeText")}</span>
+              <span className="text-lg font-medium">Home</span>
             </button>
-            <span className="text-lg text-gray-500">/ {getText("title")}</span>
+            <span className="text-lg text-gray-500">/ WATERPROOF LED LIGHTS</span>
           </div>
+            </div>
+            <div className="lg:w-2/3">
+              <h3 className="text-xl sm:text-2xl font-semibold mb-4">
+                WATERPROOF LED LIGHTS
+              </h3>
+              <p className="text-sm sm:text-base mb-6">
+              Astra Waterproof LED Lights combine durability with modern lighting solutions. Perfect for outdoor spaces, bathrooms, or kitchens, they provide reliable illumination while withstanding moisture and harsh conditions. Explore our collection to find waterproof LED lights that meet your needs.
 
-          <div className="flex-1 text-base sm:text-lg text-gray-700">
-            {getText("description")}
+              </p>
+            </div>
           </div>
         </div>
       </section>
-
       {/* Main Content */}
       <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 bg-white relative">
         {/* Filter and Search Section */}
@@ -349,18 +143,19 @@ const WaterproofLEDLight = () => {
           >
             <Filter className="h-4 w-4 sm:h-5 sm:w-5" />
             <span className="text-sm sm:text-base">
-              {showFilters ? getText("hideFilters") : getText("showFilters")}
+              {showFilters ? "Hide Filters" : "Show Filters"}
             </span>
           </motion.button>
 
           <div className="w-full md:w-1/3">
             <input
               type="text"
-              placeholder={getText("searchPlaceholder")}
+              placeholder="Search by name or part number..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full p-2 sm:p-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
             />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} />
           </div>
         </div>
 
@@ -378,7 +173,7 @@ const WaterproofLEDLight = () => {
                   className="fixed lg:relative z-50 lg:z-auto inset-y-0 left-0 w-72 sm:w-80 lg:w-1/4 bg-white p-4 sm:p-6 shadow-lg lg:shadow-none overflow-y-auto h-screen lg:h-auto"
                 >
                   <div className="flex justify-between items-center mb-4 sm:mb-6">
-                    <h2 className="text-lg sm:text-xl font-bold">{getText("filtersTitle")}</h2>
+                    <h2 className="text-lg sm:text-xl font-bold">Filters</h2>
                     <button
                       onClick={() => setShowFilters(false)}
                       className="text-gray-500 hover:text-gray-700 lg:hidden p-1"
@@ -389,7 +184,7 @@ const WaterproofLEDLight = () => {
 
                   {/* Voltage Filter */}
                   <div className="mb-4 sm:mb-6">
-                    <h3 className="font-semibold mb-2 sm:mb-3">{getText("voltageTitle")}</h3>
+                    <h3 className="font-semibold mb-2 sm:mb-3">Voltage</h3>
                     <div className="space-y-4 sm:space-y-6">
                       {["all", "12V", "24V"].map((volt) => (
                         <div key={volt} className="flex items-center">
@@ -402,7 +197,7 @@ const WaterproofLEDLight = () => {
                             onChange={() => setFilterVolt(volt)}
                           />
                           <label htmlFor={`volt-${volt}`} className="text-sm sm:text-base">
-                            {volt === "all" ? getText("allVolts") : volt}
+                            {volt === "all" ? "All Volts" : volt}
                           </label>
                         </div>
                       ))}
@@ -411,7 +206,7 @@ const WaterproofLEDLight = () => {
 
                   {/* Color Filter */}
                   <div className="mb-4 sm:mb-6">
-                    <h3 className="font-semibold mb-2 sm:mb-3">{getText("colorTitle")}</h3>
+                    <h3 className="font-semibold mb-2 sm:mb-3">Color</h3>
                     <div className="flex flex-wrap gap-4 sm:gap-3">
                       <motion.button
                         onClick={() => setFilterColor("all")}
@@ -420,10 +215,10 @@ const WaterproofLEDLight = () => {
                         }`}
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
-                        title={getText("allColors")}
+                        title="All Colors"
                       >
                         <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-gradient-to-br from-red-500 via-green-500 to-blue-500"></div>
-                        <span className="sr-only">{getText("allColors")}</span>
+                        <span className="sr-only">All Colors</span>
                       </motion.button>
 
                       {uniqueColors.map((color) => (
@@ -442,10 +237,7 @@ const WaterproofLEDLight = () => {
                   </div>
 
                   <p className="text-xs sm:text-sm text-gray-500 mt-4 sm:mt-6">
-                    {getText("showingText", { 
-                      count: filteredProducts.length, 
-                      total: products.length 
-                    })}
+                    Showing {filteredProducts.length} out of {products.length} products
                   </p>
                 </motion.div>
 
@@ -472,10 +264,7 @@ const WaterproofLEDLight = () => {
             {/* Products Count and Carousel Controls */}
             <div className="flex justify-between items-center mb-4 sm:mb-6">
               <div className="text-sm sm:text-base text-gray-600">
-                {getText("showingText", { 
-                  count: filteredProducts.length, 
-                  total: products.length 
-                })}
+                Showing {filteredProducts.length} out of {products.length} products
               </div>
               
               {totalCarousels > 1 && (
@@ -491,10 +280,7 @@ const WaterproofLEDLight = () => {
                   </button>
                   
                   <div className="text-sm sm:text-base font-medium text-gray-700">
-                    {getText("pageText", {
-                      current: currentCarousel + 1,
-                      total: totalCarousels
-                    })}
+                    Page {currentCarousel + 1} of {totalCarousels}
                   </div>
                   
                   <button
@@ -549,15 +335,15 @@ const WaterproofLEDLight = () => {
 
                           <div className="space-y-1 text-sm">
                             <div className="flex items-center">
-                              <span className="text-gray-500 mr-2">{getText("partNoText")}</span>
+                              <span className="text-gray-500 mr-2">Part No:</span>
                               <span className="font-medium text-gray-700 truncate">{product.partNo}</span>
                             </div>
                             <div className="flex items-center">
-                              <span className="text-gray-500 mr-2">{getText("voltText")}</span>
+                              <span className="text-gray-500 mr-2">Volt:</span>
                               <span className="font-medium text-gray-700">{product.volt}</span>
                             </div>
                             <div className="flex items-center">
-                              <span className="text-gray-500 mr-2">{getText("colorText")}</span>
+                              <span className="text-gray-500 mr-2">Color:</span>
                               <div
                                 className="w-4 h-4 rounded-full border border-gray-300"
                                 style={{ backgroundColor: product.color }}
@@ -590,24 +376,6 @@ const WaterproofLEDLight = () => {
           </motion.div>
         </div>
       </div>
-
-      {/* Full-page loading overlay */}
-      <AnimatePresence>
-        {isTranslating && (
-          <motion.div
-            className="fixed inset-0 bg-white bg-opacity-70 flex items-center justify-center z-50"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <motion.div
-              className="w-12 h-12 border-4 border-blue-900 border-t-transparent rounded-full"
-              animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 };

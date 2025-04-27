@@ -1,8 +1,8 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import Navbar from './components/Navbar';
 import './App.css';
-import Home from './components/HomePage'
-import Footer from './components/Footer'
+import Home from './components/HomePage';
+import Footer from './components/Footer';
 import Water from './components/products/water';
 import Boat from './components/products/boat';
 import Fog from './components/products/fog';
@@ -14,26 +14,40 @@ import Side from './components/products/side';
 import Decorative from './components/products/decorative';
 import Contact from './components/contact';
 import About from './components/about';
+
 function App() {
   return (
-    <>
-        <Navbar/>
-          <Routes>
-          <Route path="automax/" element={<Home/>}/>
-          <Route path="/components/products/water" element={<Water/>}/>
-          <Route path="/components/products/boat" element={<Boat/>}/>
-          <Route path="/components/products/fog" element={<Fog/>}/>
-          <Route path="/components/products/twowheeler" element={<Twowheeler/>}/>
-          <Route path="/components/products/converters" element={<Converters/>}/>
-          <Route path="/components/products/roof" element={<Roof/>}/>
-          <Route path="/components/products/tail" element={<Tail/>}/>
-          <Route path="/components/products/side" element={<Side/>}/>
-          <Route path="/components/products/decorative" element={<Decorative/>}/>
-          <Route path="/components/contact" element={<Contact/>}/>
-          <Route path="/components/about" element={<About/>}/>
-          </Routes>
-        <Footer/>
-    </>
+    <div className="app">
+      <Navbar />
+      <main className="main-content">
+        <Routes>
+          {/* Redirects */}
+          <Route path="/" element={<Navigate to="/home" replace />} />
+          <Route path="/automax" element={<Navigate to="/home" replace />} />
+          <Route path="/components" element={<Navigate to="/home" replace />} />
+          
+          {/* Main Routes */}
+          <Route path="/home" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          
+          {/* Product Routes */}
+          <Route path="/products/water" element={<Water />} />
+          <Route path="/products/boat" element={<Boat />} />
+          <Route path="/products/fog" element={<Fog />} />
+          <Route path="/products/twowheeler" element={<Twowheeler />} />
+          <Route path="/products/converters" element={<Converters />} />
+          <Route path="/products/roof" element={<Roof />} />
+          <Route path="/products/tail" element={<Tail />} />
+          <Route path="/products/side" element={<Side />} />
+          <Route path="/products/decorative" element={<Decorative />} />
+          
+          {/* Catch-all route */}
+          <Route path="*" element={<Navigate to="/home" replace />} />
+        </Routes>
+      </main>
+      <Footer />
+    </div>
   );
 }
 
