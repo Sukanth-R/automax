@@ -23,7 +23,6 @@ function App() {
         <Routes>
           {/* Redirects */}
           <Route path="/" element={<Navigate to="/home" replace />} />
-          <Route path="/automax" element={<Navigate to="/home" replace />} />
           <Route path="/components" element={<Navigate to="/home" replace />} />
           
           {/* Main Routes */}
