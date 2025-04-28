@@ -49,10 +49,10 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-3 text-red-500">Quick Links</h3>
             <ul className="space-y-3">
               {[
-                { path: '/home', label: 'Home' },
-                { path: '/about', label: 'About' },
-                { path: '/services', label: 'Gallery' },
-                { path: '/contact', label: 'Contact' }
+                { path: 'automax/home', label: 'Home' },
+                { path: 'automax/about', label: 'About' },
+                { path: 'automax/services', label: 'Gallery' },
+                { path: 'automax/contact', label: 'Contact' }
               ].map((link) => (
                 <motion.li
                   key={link.path}
@@ -90,7 +90,7 @@ const Footer = () => {
                   whileHover={{ x: 5 }}
                 >
                   <Link 
-                    to={`/products/${product.path}`}
+                    to={`automax/products/${product.path}`}
                     className="block py-1 hover:text-red-600 transition-colors duration-200"
                   >
                     {product.label}
@@ -138,22 +138,22 @@ const Footer = () => {
             <h3 className="text-xl font-semibold mb-2 text-red-500">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/home" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
+                <Link to="automax/home" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
                   Home
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
+                <Link to="automax/about" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
                   About
                 </Link>
               </li>
               <li>
-                <Link to="/services" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
+                <Link to="automax/services" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
                   Gallery
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
+                <Link to="automax/contact" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
                   Contact
                 </Link>
               </li>
@@ -165,47 +165,47 @@ const Footer = () => {
             <h3 className="text-xl font-semibold mb-2 text-red-500">Our Products</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/products/water" className="block hover:text-red-600 hover:tracking-widest transition-all duration-200">
+                <Link to="automax/products/water" className="block hover:text-red-600 hover:tracking-widest transition-all duration-200">
                   Water Proof LED Lights
                 </Link>
               </li>
               <li>
-                <Link to="/products/boat" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
+                <Link to="automax/products/boat" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
                   Boat Lights
                 </Link>
               </li>
               <li>
-                <Link to="/products/fog" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
+                <Link to="automax/products/fog" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
                   Fog Lights
                 </Link>
               </li>
               <li>
-                <Link to="/products/twowheeler" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
+                <Link to="automax/products/twowheeler" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
                   Two Wheeler Lights
                 </Link>
               </li>
               <li>
-                <Link to="/products/converters" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
+                <Link to="automax/products/converters" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
                   Converters
                 </Link>
               </li>
               <li>
-                <Link to="/products/roof" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
+                <Link to="automax/products/roof" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
                   Roof Lamps
                 </Link>
               </li>
               <li>
-                <Link to="/products/tail" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
+                <Link to="automax/products/tail" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
                   Tail Lamp Assembly
                 </Link>
               </li>
               <li>
-                <Link to="/products/side" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
+                <Link to="automax/products/side" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
                   Side Indicators
                 </Link>
               </li>
               <li>
-                <Link to="/products/decorative" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
+                <Link to="automax/products/decorative" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
                   Decorative Lights
                 </Link>
               </li>

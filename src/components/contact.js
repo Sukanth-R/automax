@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { Home } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Contact = () => {
+  const navigate = useNavigate();  
   const [isLoaded, setIsLoaded] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -46,7 +49,6 @@ const Contact = () => {
           success: true,
           message: 'Message sent successfully! We will contact you soon.',
         });
-        // Reset form
         setFormData({
           name: "",
           email: "",
@@ -74,57 +76,104 @@ const Contact = () => {
     setIsLoaded(true);
   }, []);
 
-  // Google Maps directions URL with the destination pre-filled
   const destination = "Automax+Electronics,+11.352774448299584,+77.73003007452424";
   const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}`;
 
   return (
     <div className="flex min-h-screen bg-white flex-col">
-      {/* Image Section */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1, ease: "easeOut" }}
-        className="relative w-full h-72 md:h-96 overflow-hidden"
+      {/* Hero Section with Background Image */}
+      <section 
+        className="w-full px-4 sm:px-6 lg:px-20 py-12 text-black relative"
+        style={{
+          backgroundImage: `url('https://www.jycircuit.net/wp-content/uploads/2022/12/contact.jpg')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
       >
-        <img
-          src="https://t3.ftcdn.net/jpg/09/85/53/02/240_F_985530270_SgZsAuSMfXttrmIvPtbGU85hYBxygx6I.jpg"
-          alt="Side Indicators Banner"
-          className="w-full h-full object-cover transform transition-transform duration-1000 hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-900/70 to-transparent flex items-center justify-center">
-          <motion.h1
-            initial={{ y: -50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.5, duration: 0.8 }}
-            className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold text-center px-4 drop-shadow-lg"
-          >
-            CONTACT US
-          </motion.h1>
+        <div className="absolute inset-0 bg-black opacity-50"></div>
+        <div className="container mx-auto relative z-10">
+          <div className="flex flex-col lg:flex-row lg:space-x-8">
+            <div className="lg:w-1/3 mb-8 lg:mb-0">
+              <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-red-600">AUTOMAX</h2>
+              <p className="text-sm uppercase text-white mb-2">MANUFACTURING | MARKETING</p>
+              <div className="w-16 h-1 bg-orange-400 mb-6"></div>
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={() => navigate('/')} 
+                  className="flex items-center gap-1 text-white hover:text-blue-300 transition-colors"
+                >
+                  <Home className="h-5 w-5" />
+                  <span className="text-lg font-medium">Home</span>
+                </button>
+                <span className="text-lg text-gray-300">/ CONTACT US</span>
+              </div>
+            </div>
+            <div className="lg:w-2/3">
+              <h3 className="text-xl sm:text-4xl font-semibold mb-6 text-white">FEEL FREE TO CONTACT US<br></br>AND WE ARE AVAILABLE<br></br> AT ANYTIME</h3>
+            </div>
+          </div>
         </div>
-      </motion.div>
+      </section>
 
-      {/* Logo and Text Section */}
-      <section className="w-full px-6 lg:px-20 py-2 flex flex-col md:flex-row items-center justify-center">
-        <div className="flex-shrink-0 w-48 flex justify-center">
-          <img
-            src="/images/logo.png"
-            alt="Logo"
-            className="w-48 h-48 object-contain rounded-lg"
-          />
-        </div>
-        <div className="w-[350px] mb-4 flex justify-center">
-          <h3
-            className="text-[70px] md:text-[100px] font-extrabold text-red-700"
-            style={{ fontFamily: 'Georgia, sans-serif', fontStyle: 'italic' }}
-          >
-            ASTRA
-          </h3>
+      {/* Contact Cards Section */}
+      <section className="w-full px-4 sm:px-6 lg:px-20 py-12">
+        <div className="container mx-auto">
+        <h1 className="text-center text-3xl text-red-600 font-bold pb-6">CONTACT US</h1>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* WhatsApp Card */}
+            <div className="rounded-lg p-6 text-center shadow-md bg-gray-100">
+              <svg className="mx-auto h-12 w-12 text-red-600 mb-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                <path d="M15.5 14.5c-.3 0-.6-.1-.8-.2l-2.1-1c-.2-.1-.4-.1-.6 0l-1.2.6c-.4.2-.8.1-1.1-.2-.3-.3-.5-.7-.4-1.1l.5-1.5c.1-.2 0-.4-.1-.6l-1-1.5c-.2-.3-.2-.6-.1-.9.1-.3.4-.5.7-.5h1.5c.2 0 .4.1.5.2l2.5 3c.1.2.2.3.4.3s.3-.1.4-.2l1.5-2c.2-.2.4-.3.6-.2.2.1.3.3.2.6l-.5 1.5c-.1.2 0 .4.1.6l1 1.5c.2.3.2.6.1.9-.1.3-.4.5-.7.5h-1.5z"/>
+              </svg>
+              <h4 className="text-lg font-semibold mb-2">WhatsApp Support</h4>
+              <p className="text-gray-600 mb-4">9711773333</p>
+              <a
+                href="https://wa.me/9711773333"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-400 transition-all duration-300"
+              >
+                Chat Now
+              </a>
+            </div>
+            {/* Email Card */}
+            <div className="bg-gray-100 rounded-lg p-6 text-center shadow-md">
+              <svg className="mx-auto h-12 w-12 text-red-600 mb-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+              <h4 className="text-lg font-semibold mb-2">Email Support</h4>
+              <p className="text-gray-600 mb-4">customercare@havells.com</p>
+              <a
+                href="mailto:customercare@havells.com"
+                className="inline-block bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-400 transition-all duration-300"
+              >
+                Email Us
+              </a>
+            </div>
+            {/* Phone Card */}
+            <div className="bg-gray-100 rounded-lg p-6 text-center shadow-md">
+              <svg className="mx-auto h-12 w-12 text-red-600 mb-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+              </svg>
+              <h4 className="text-lg font-semibold mb-2">Customer Care No.</h4>
+              <p className="text-gray-600 mb-4">08045771313</p>
+              <a
+                href="tel:08045771313"
+                className="inline-block bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-400 transition-all duration-300"
+              >
+                Call Now
+              </a>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Contact Form and Map Grid Section */}
-      <div className="container mx-auto p-4">
+      <div className="container mx-auto p-4 mt-5">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Form Column */}
           <motion.form
@@ -134,10 +183,9 @@ const Contact = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <h3 className="text-lg md:text-xl font-bold text-blue-900 mb-3 text-left">Contact us</h3>
             {/* Query Text */}
-            <h2 className="text-2xl md:text-4xl font-bold text-blue-900 mb-8 text-left tracking-wide pb-5">
-              If you have any queries,<br />Please contact us
+            <h2 className="text-2xl md:text-4xl font-bold text-black mb-8 text-left tracking-wide pb-5">
+              If you have any queries,<br />Please feel free to contact us
             </h2>
 
             {/* Submission Status Message */}
@@ -159,7 +207,7 @@ const Contact = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  className="w-full p-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 placeholder-gray-400 hover:bg-white hover:shadow-md"
+                  className="w-full p-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300 placeholder-gray-400 hover:bg-white hover:shadow-md"
                   placeholder="Enter your name"
                   required
                 />
@@ -174,7 +222,7 @@ const Contact = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full p-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 placeholder-gray-400 hover:bg-white hover:shadow-md"
+                  className="w-full p-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300 placeholder-gray-400 hover:bg-white hover:shadow-md"
                   placeholder="Enter your email"
                   required
                 />
@@ -193,7 +241,7 @@ const Contact = () => {
                   name="mobile"
                   value={formData.mobile}
                   onChange={handleInputChange}
-                  className="w-full p-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 placeholder-gray-400 hover:bg-white hover:shadow-md"
+                  className="w-full p-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300 placeholder-gray-400 hover:bg-white hover:shadow-md"
                   placeholder="Enter your mobile"
                   required
                 />
@@ -208,7 +256,7 @@ const Contact = () => {
                   name="country"
                   value={formData.country}
                   onChange={handleInputChange}
-                  className="w-full p-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 placeholder-gray-400 hover:bg-white hover:shadow-md"
+                  className="w-full p-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300 placeholder-gray-400 hover:bg-white hover:shadow-md"
                   placeholder="Enter your country"
                   required
                 />
@@ -226,7 +274,7 @@ const Contact = () => {
                 name="subject"
                 value={formData.subject}
                 onChange={handleInputChange}
-                className="w-full p-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 placeholder-gray-400 hover:bg-white hover:shadow-md"
+                className="w-full p-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300 placeholder-gray-400 hover:bg-white hover:shadow-md"
                 placeholder="Enter the subject"
                 required
               />
@@ -243,7 +291,7 @@ const Contact = () => {
                 value={formData.message}
                 onChange={handleInputChange}
                 rows="5"
-                className="w-full p-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 placeholder-gray-400 hover:bg-white hover:shadow-md resize-none"
+                className="w-full p-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300 placeholder-gray-400 hover:bg-white hover:shadow-md resize-none"
                 placeholder="Enter your message"
                 required
               ></textarea>
@@ -253,7 +301,7 @@ const Contact = () => {
             <motion.button
               type="submit"
               disabled={isSubmitting}
-              className={`w-full bg-gradient-to-r mb-5 ${isSubmitting ? 'from-gray-600 to-gray-800' : 'from-blue-600 to-blue-800'} text-white py-3 px-6 rounded-lg hover:from-blue-700 hover:to-blue-900 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-semibold`}
+              className={`w-full bg-gradient-to-r mb-5 ${isSubmitting ? 'from-gray-600 to-gray-800' : 'from-red-600 to-red-800'} text-white  bg-red-600 py-3 px-6 rounded-lg hover:from-red-600 hover:to-red-400 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-semibold`}
               whileHover={{ scale: isSubmitting ? 1 : 1.05 }}
               whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
             >
@@ -278,6 +326,9 @@ const Contact = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
+            <h2 className="text-2xl md:text-4xl font-bold text-red-600 mb-8 text-left tracking-wide pb-5">
+              Here We Are,<br />Head Office
+            </h2>
             <div className="h-full overflow-hidden rounded-lg shadow-lg">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3911.752573440062!2d77.73003007452424!3d11.352774448299584!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba96f4deff2fa45%3A0xf50e560171992b50!2sAutomax%20Electronics!5e0!3m2!1sen!2sin!4v1739557612039!5m2!1sen!2sin"
@@ -295,7 +346,7 @@ const Contact = () => {
                 href={directionsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block bg-blue-600 text-white py-3 mb-5 px-6 mt-3 rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-lg md:text-xl"
+                className="inline-block bg-red-600 text-white py-3 mb-5 px-6 mt-3 rounded-lg hover:bg-red-400 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-lg md:text-xl"
               >
                 Get Directions
               </a>

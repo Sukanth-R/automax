@@ -27,20 +27,20 @@ function App() {
           <Route path="/components" element={<Navigate to="/home" replace />} />
           
           {/* Main Routes */}
-          <Route path="/home" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
+          <Route path="automax/home" element={<Home />} />
+          <Route path="automax/about" element={<About />} />
+          <Route path="automax/contact" element={<Contact />} />
           
           {/* Product Routes */}
-          <Route path="/products/water" element={<Water />} />
-          <Route path="/products/boat" element={<Boat />} />
-          <Route path="/products/fog" element={<Fog />} />
-          <Route path="/products/twowheeler" element={<Twowheeler />} />
-          <Route path="/products/converters" element={<Converters />} />
-          <Route path="/products/roof" element={<Roof />} />
-          <Route path="/products/tail" element={<Tail />} />
-          <Route path="/products/side" element={<Side />} />
-          <Route path="/products/decorative" element={<Decorative />} />
+          <Route path="automax/products/water" element={<Water />} />
+          <Route path="automax/products/boat" element={<Boat />} />
+          <Route path="automax/products/fog" element={<Fog />} />
+          <Route path="automax/products/twowheeler" element={<Twowheeler />} />
+          <Route path="automax/products/converters" element={<Converters />} />
+          <Route path="automax/products/roof" element={<Roof />} />
+          <Route path="automax/products/tail" element={<Tail />} />
+          <Route path="automax/products/side" element={<Side />} />
+          <Route path="automax/products/decorative" element={<Decorative />} />
           
           {/* Catch-all route */}
           <Route path="*" element={<Navigate to="/home" replace />} />
