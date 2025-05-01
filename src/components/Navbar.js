@@ -37,25 +37,24 @@ const Navbar = () => {
   };
 
   const handleLogoClick = () => {
-    navigate("/home");
+    navigate("/");
     closeMobileMenu();
   };
 
   const isActive = (path) => {
-    return location.pathname === path || 
-           (path === "/home" && location.pathname === "/");
+    return location.pathname === path;
   };
 
   const productLinks = [
-    { path: "automax/products/water", label: "Water Proof LED Lights" },
-    { path: "automax/products/boat", label: "Boat Lights" },
-    { path: "automax/products/fog", label: "Fog Lights" },
-    { path: "automax/products/twowheeler", label: "Two Wheeler Lights" },
-    { path: "automax/products/converters", label: "Converters" },
-    { path: "automax/products/roof", label: "Roof Lamps" },
-    { path: "automax/products/tail", label: "Tail Lamp Assembly" },
-    { path: "automax/products/side", label: "Side Indicators" },
-    { path: "automax/products/decorative", label: "Decorative Lights" },
+    { path: "/products/water", label: "Water Proof LED Lights" },
+    { path: "/products/boat", label: "Boat Lights" },
+    { path: "/products/fog", label: "Fog Lights" },
+    { path: "/products/twowheeler", label: "Two Wheeler Lights" },
+    { path: "/products/converters", label: "Converters" },
+    { path: "/products/roof", label: "Roof Lamps" },
+    { path: "/products/tail", label: "Tail Lamp Assembly" },
+    { path: "/products/side", label: "Side Indicators" },
+    { path: "/products/decorative", label: "Decorative Lights" },
   ];
 
   return (
@@ -181,15 +180,15 @@ const Navbar = () => {
         <div className="container mx-auto px-4 md:px-6">
           <div className="flex items-center space-x-8">
             <Link
-              to="automax/home"
+              to="/"
               className={`hover:text-red-600 transition duration-300 ${
-                isActive("/home") ? "text-red-600 font-medium" : ""
+                isActive("/") ? "text-red-600 font-medium" : ""
               }`}
             >
               Home
             </Link>
             <Link
-              to="automax/about"
+              to="/about"
               className={`hover:text-red-600 transition duration-300 ${
                 isActive("/about") ? "text-red-600 font-medium" : ""
               }`}
@@ -231,7 +230,7 @@ const Navbar = () => {
               </div>
             </div>
             <Link
-              to="automax/contact"
+              to="/contact"
               className={`hover:text-red-600 transition duration-300 ${
                 isActive("/contact") ? "text-red-600 font-medium" : ""
               }`}
@@ -252,16 +251,16 @@ const Navbar = () => {
       >
         <div className="h-full overflow-y-auto px-4 pb-4 space-y-2 pt-4">
           <Link
-            to="automax/home"
+            to="/"
             className={`block py-3 px-4 text-base hover:bg-gray-100 transition duration-300 rounded-md ${
-              isActive("/home") ? "bg-gray-100 text-red-600 font-medium" : ""
+              isActive("/") ? "bg-gray-100 text-red-600 font-medium" : ""
             }`}
             onClick={closeMobileMenu}
           >
             Home
           </Link>
           <Link
-            to="automax/about"
+            to="/about"
             className={`block py-3 px-4 text-base hover:bg-gray-100 transition duration-300 rounded-md ${
               isActive("/about") ? "bg-gray-100 text-red-600 font-medium" : ""
             }`}
@@ -309,7 +308,7 @@ const Navbar = () => {
           </div>
 
           <Link
-            to="automax/contact"
+            to="/contact"
             className={`block py-3 px-4 text-base hover:bg-gray-100 transition duration-300 rounded-md ${
               isActive("/contact") ? "bg-gray-100 text-red-600 font-medium" : ""
             }`}
