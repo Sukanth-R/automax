@@ -94,7 +94,7 @@ const Navbar = () => {
     <>
       {/* First Navbar (Logo, Search, Contact, Social Media) */}
       <nav className="bg-white text-black p-4 md:sticky md:top-0 md:z-50 border-b border-gray-200">
-        <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
+        <div className="container mx-auto md:px-10 flex justify-between items-center">
           {/* Logo - Left aligned */}
 <div className="cursor-pointer" onClick={handleLogoClick}>
   <img 
@@ -227,7 +227,7 @@ const Navbar = () => {
               onChange={handleSearchChange}
               onFocus={() => setShowSearchResults(true)}
               placeholder="Search Products"
-              className="w-full p-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500"
+              className="w-full p-2 ms-10 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500"
             />
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} />
             
@@ -256,7 +256,7 @@ const Navbar = () => {
       {/* Second Navbar (Navigation Links) - Hidden on Mobile */}
       <nav className="hidden md:block bg-white text-black py-3 sticky top-[72px] z-40 border-b border-gray-200 shadow-sm">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="flex items-center space-x-8">
+          <div className="flex items-center ms-10 space-x-8">
             <Link
               to="/"
               className={`hover:text-red-600 transition duration-300 ${

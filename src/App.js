@@ -14,10 +14,11 @@ import Side from './components/products/side';
 import Decorative from './components/products/decorative';
 import Contact from './components/contact';
 import About from './components/about';
-
+import { GlobalStyle } from './GlobalStyle';
 function App() {
   return (
     <div className="app">
+      <GlobalStyle />
       <Navbar />
       <main className="main-content">
         <Routes>
