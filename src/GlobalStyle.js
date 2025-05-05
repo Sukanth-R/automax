@@ -16,8 +16,7 @@ export const GlobalStyle = createGlobalStyle`
     font-family: 'Nunito', sans-serif;
     font-size: 1rem;
     background: linear-gradient(to right, #a8d0d6, #5f87a3); /* optional background */
-    color: white; /* optional: if text is on dark background */
-  }
+}
 
   h1 {
     font-size: 3rem;
