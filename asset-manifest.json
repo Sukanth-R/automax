@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/automax/static/css/main.98f88066.css",
-    "main.js": "/automax/static/js/main.67df7418.js",
+    "main.css": "/automax/static/css/main.60c25774.css",
+    "main.js": "/automax/static/js/main.6556249d.js",
     "index.html": "/automax/index.html",
-    "main.98f88066.css.map": "/automax/static/css/main.98f88066.css.map",
-    "main.67df7418.js.map": "/automax/static/js/main.67df7418.js.map"
+    "main.60c25774.css.map": "/automax/static/css/main.60c25774.css.map",
+    "main.6556249d.js.map": "/automax/static/js/main.6556249d.js.map"
   },
   "entrypoints": [
-    "static/css/main.98f88066.css",
-    "static/js/main.67df7418.js"
+    "static/css/main.60c25774.css",
+    "static/js/main.6556249d.js"
   ]
 }
