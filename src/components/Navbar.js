@@ -8,6 +8,8 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showSearchResults, setShowSearchResults] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -28,12 +30,27 @@ const Navbar = () => {
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!e.target.closest('.search-container')) {
+        setShowSearchResults(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const closeMobileMenu = () => {
     setIsOpen(false);
   };
 
   const toggleSearch = () => {
     setSearchOpen(!searchOpen);
+    if (!searchOpen) {
+      setShowSearchResults(false);
+      setSearchQuery("");
+    }
   };
 
   const handleLogoClick = () => {
@@ -43,6 +60,18 @@ const Navbar = () => {
 
   const isActive = (path) => {
     return location.pathname === path;
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    setShowSearchResults(true);
+  };
+
+  const handleSearchResultClick = (path) => {
+    navigate(path);
+    setSearchQuery("");
+    setShowSearchResults(false);
+    setSearchOpen(false);
   };
 
   const productLinks = [
@@ -57,25 +86,54 @@ const Navbar = () => {
     { path: "/products/decorative", label: "Decorative Lights" },
   ];
 
+  const filteredProducts = productLinks.filter(product =>
+    product.label.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <>
       {/* First Navbar (Logo, Search, Contact, Social Media) */}
       <nav className="bg-white text-black p-4 md:sticky md:top-0 md:z-50 border-b border-gray-200">
         <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
           {/* Logo - Left aligned */}
-          <div className="text-3xl font-bold cursor-pointer" onClick={handleLogoClick}>
-            <span className="text-red-500">AUTOMAX</span>
-          </div>
+<div className="cursor-pointer" onClick={handleLogoClick}>
+  <img 
+    src="https://sukanth-r.github.io/automax/images/logo1.png"  // Path from public folder
+    alt="AUTOMAX Logo"
+    className="h-10 w-auto object-contain"  // Maintain aspect ratio
+  />
+</div>
 
-          {/* Search Bar (Visible on Desktop) */}
-          <div className="hidden md:flex flex-1 mx-8 max-w-2xl">
+          {/* Updated Search Bar */}
+          <div className="hidden md:flex flex-1 mx-8 max-w-2xl search-container relative">
             <div className="relative w-full">
               <input
                 type="text"
+                value={searchQuery}
+                onChange={handleSearchChange}
                 placeholder="Search Products"
-                className="w-full p-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500"
+                className="w-full p-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500"
               />
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} />
+              
+              {/* Search Results Dropdown */}
+              {showSearchResults && searchQuery && (
+                <div className="absolute top-full left-0 right-0 bg-white mt-1 rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto z-50">
+                  {filteredProducts.length > 0 ? (
+                    filteredProducts.map((product) => (
+                      <div
+                        key={product.path}
+                        onClick={() => handleSearchResultClick(product.path)}
+                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-800 hover:text-red-600"
+                      >
+                        {product.label}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="px-4 py-2 text-gray-500">No products found</div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
@@ -87,14 +145,12 @@ const Navbar = () => {
                 className="flex items-center hover:text-red-700 transition duration-300"
               >
                 <FaPhone style={{ transform: "rotate(90deg)" }} className="text-red-500 mr-2" size={16} />
-                +91 88259 67397
               </a>
               <a
                 href="mailto:vivekautomax@gmail.com"
                 className="flex items-center hover:text-red-700 transition duration-300"
               >
                 <FaEnvelope className="text-red-500 mr-2" size={16} />
-                vivekautomax@gmail.com
               </a>
             </div>
             <div className="flex items-center space-x-4 ml-2">
@@ -158,19 +214,41 @@ const Navbar = () => {
 
       {/* Mobile Search Bar (Toggles when search icon clicked) */}
       <div
-        className={`md:hidden transition-all duration-300 overflow-hidden bg-white z-50 relative ${
-          searchOpen ? "max-h-20 py-3" : "max-h-0"
+        className={`md:hidden transition-all duration-300 bg-white z-50 relative ${
+          searchOpen ? "max-h-20 py-3" : "max-h-0 overflow-hidden"
         }`}
         aria-hidden={!searchOpen}
       >
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 search-container">
           <div className="relative w-full">
             <input
               type="text"
+              value={searchQuery}
+              onChange={handleSearchChange}
+              onFocus={() => setShowSearchResults(true)}
               placeholder="Search Products"
-              className="w-full p-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500"
+              className="w-full p-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500"
             />
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} />
+            
+            {/* Mobile Search Results Dropdown */}
+            {showSearchResults && searchQuery && (
+              <div className="absolute top-full left-0 right-0 bg-white mt-1 rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto z-50">
+                {filteredProducts.length > 0 ? (
+                  filteredProducts.map((product) => (
+                    <div
+                      key={product.path}
+                      onClick={() => handleSearchResultClick(product.path)}
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-800 hover:text-red-600"
+                    >
+                      {product.label}
+                    </div>
+                  ))
+                ) : (
+                  <div className="px-4 py-2 text-gray-500">No products found</div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
