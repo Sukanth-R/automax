@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/automax/static/css/main.4268308c.css",
-    "main.js": "/automax/static/js/main.aab9dd29.js",
+    "main.js": "/automax/static/js/main.f6902959.js",
     "index.html": "/automax/index.html",
     "main.4268308c.css.map": "/automax/static/css/main.4268308c.css.map",
-    "main.aab9dd29.js.map": "/automax/static/js/main.aab9dd29.js.map"
+    "main.f6902959.js.map": "/automax/static/js/main.f6902959.js.map"
   },
   "entrypoints": [
     "static/css/main.4268308c.css",
-    "static/js/main.aab9dd29.js"
+    "static/js/main.f6902959.js"
   ]
 }
