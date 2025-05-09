@@ -1,220 +1,277 @@
 import { Link } from 'react-router-dom';
-import { FaTwitter, FaFacebook, FaLinkedin, FaInstagram } from 'react-icons/fa';
+import { FaTwitter, FaFacebook, FaLinkedin, FaInstagram, FaPhone, FaEnvelope } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-200 text-black py-8 px-6">
-      <div className="max-w-6xl mx-auto">
-        {/* Mobile View - Stacked Layout */}
-        <div className="block md:hidden space-y-8">
-          {/* Address Section */}
-          <div className="pb-4">
-            <h3 className="text-lg font-semibold mb-3 text-red-500">Address</h3>
-            <div className="space-y-2 text-black">
-              <p>123 Street Name</p>
-              <p>City, State, ZIP</p>
-              <p>Country</p>
-              <p>Email: example@email.com</p>
-              <p>Phone: +123 456 7890</p>
-              
-              <div className="mt-4">
-                <h4 className="font-medium mb-2">Follow Us</h4>
-                <div className="flex space-x-5 mt-4">
+    <footer className="bg-gray-300 text-black py-6 px-3">
+      <div className="max-w-7xl mx-auto">
+        {/* Main Container: Split into Left and Right */}
+        <div className="flex flex-col md:flex-row gap-6">
+          {/* Left Side: Logo, MANUFACTURING | MARKETING, Follow Us */}
+          <div className="md:w-1/3 flex flex-col items-center md:items-start text-center md:text-left">
+            <img 
+              src="https://sukanth-r.github.io/automax/images/logo1.png"
+              alt="AUTOMAX Logo" 
+              className="h-12 mb-3"
+            />
+            <p className="text-[10px] text-gray-600 md:ms-6 mb-2">
+              MANUFACTURING | MARKETING
+            </p>
+            <div className="w-10 h-1 bg-orange-500 md:ms-6 mb-3"></div>
+            {/* Follow Us */}
+            <div>
+              <h3 className="text-sm font-semibold md:ms-6 mb-2 text-red-500">Follow Us</h3>
+              <div className="flex space-x-3 justify-center md:ms-6 md:justify-start">
+                {[
+                  { icon: FaTwitter, url: 'https://twitter.com' },
+                  { icon: FaFacebook, url: 'https://facebook.com' },
+                  { icon: FaLinkedin, url: 'https://linkedin.com' },
+                  { icon: FaInstagram, url: 'https://instagram.com' },
+                ].map((social, index) => (
+                  <motion.a
+                    key={index}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.1 }}
+                    className="hover:text-red-600"
+                  >
+                    <social.icon size={16} />
+                  </motion.a>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Side: Links, Address, Contact */}
+          <div className="md:w-2/3 flex flex-col gap-6">
+            {/* Mobile View */}
+            <div className="block md:hidden space-y-4">
+              {/* Quick Links */}
+              <div>
+                <h3 className="text-sm font-semibold mb-2 text-red-500">Quick Links</h3>
+                <ul className="space-y-1 text-xs">
                   {[
-                    { icon: FaTwitter, url: 'https://twitter.com' },
-                    { icon: FaFacebook, url: 'https://facebook.com' },
-                    { icon: FaLinkedin, url: 'https://linkedin.com' },
-                    { icon: FaInstagram, url: 'https://instagram.com' }
-                  ].map((social, index) => (
-                    <motion.a
-                      key={index}
-                      href={social.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.1 }}
-                      className="hover:text-blue-300"
+                    { path: '/automax/', label: 'Home' },
+                    { path: '/automax/about', label: 'About' },
+                    { path: '/automax/services', label: 'Gallery' },
+                    { path: '/automax/contact', label: 'Contact' },
+                  ].map((link) => (
+                    <motion.li
+                      key={link.path}
+                      whileHover={{ x: 5 }}
                     >
-                      <social.icon size={24} />
-                    </motion.a>
+                      <Link 
+                        to={link.path}
+                        className="block py-0.5 hover:text-red-600 transition-colors duration-200"
+                      >
+                        {link.label}
+                      </Link>
+                    </motion.li>
                   ))}
+                </ul>
+              </div>
+
+              {/* Products */}
+              <div>
+                <h3 className="text-sm font-semibold mb-2 text-red-500">Our Products</h3>
+                <ul className="space-y-1 text-xs">
+                  {[
+                    { path: 'water', label: 'Water Proof LED Lights' },
+                    { path: 'boat', label: 'Boat Lights' },
+                    { path: 'fog', label: 'Fog Lights' },
+                    { path: 'twowheeler', label: 'Two Wheeler Lights' },
+                    { path: 'converters', label: 'Converters' },
+                    { path: 'roof', label: 'Roof Lamps' },
+                    { path: 'tail', label: 'Tail Lamp Assembly' },
+                    { path: 'side', label: 'Side Indicators' },
+                    { path: 'decorative', label: 'Decorative Lights' },
+                  ].map((product) => (
+                    <motion.li
+                      key={product.path}
+                      whileHover={{ x: 5 }}
+                    >
+                      <Link 
+                        to={`/automax/products/${product.path}`}
+                        className="block py-0.5 hover:text-red-600 transition-colors duration-200"
+                      >
+                        {product.label}
+                      </Link>
+                    </motion.li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Head Office Address */}
+              <div>
+                <h3 className="text-sm font-semibold mb-2 text-red-500">Head Office Address</h3>
+                <p className="text-xs">123 Business Avenue</p>
+                <p className="text-xs">Mumbai, MH, 400001</p>
+                <p className="text-xs">India</p>
+              </div>
+
+              {/* Factory Address */}
+              <div>
+                <h3 className="text-sm font-semibold mb-2 text-red-500">Factory Address</h3>
+                <p className="text-xs">456 Industrial Zone</p>
+                <p className="text-xs">Pune, MH, 411001</p>
+                <p className="text-xs">India</p>
+              </div>
+
+              {/* Contact Us */}
+              <div>
+                <h3 className="text-sm font-semibold mb-2 text-red-500">Contact Us</h3>
+                <p className="text-xs flex items-center justify-start md:justify-start">
+                  <FaEnvelope className="mr-2 text-red-500" size={14} />
+                  <a href="mailto:contact@automax.com" className="hover:text-red-600">contact@automax.com</a>
+                </p>
+                <p className="text-xs flex items-center justify-start md:justify-start">
+                  <FaPhone className="mr-2 text-red-500" size={14} />
+                  <a href="tel:+912345678900" className="hover:text-red-600">+91 234 567 8900</a>
+                </p>
+              </div>
+            </div>
+
+            {/* Desktop View */}
+            <div className="hidden md:block">
+              {/* Top: Links (Quick Links and Products) */}
+              <div className="grid grid-cols-4 gap-4 mb-6">
+                {/* Quick Links */}
+                <div>
+                  <h3 className="text-sm font-semibold mb-2 text-red-500">Quick Links</h3>
+                  <ul className="space-y-1 text-xs">
+                    {[
+                      { path: '/automax/', label: 'Home' },
+                      { path: '/automax/about', label: 'About' },
+                      { path: '/automax/services', label: 'Gallery' },
+                      { path: '/automax/contact', label: 'Contact' },
+                    ].map((link) => (
+                      <motion.li
+                        key={link.path}
+                        whileHover={{ x: 5 }}
+                      >
+                        <Link 
+                          to={link.path}
+                          className="block py-0.5 hover:text-red-600 transition-colors duration-200"
+                        >
+                          {link.label}
+                        </Link>
+                      </motion.li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Products - Split into 3 columns */}
+                <div>
+                  <h3 className="text-sm font-semibold mb-2 text-red-500">Our Products</h3>
+                  <ul className="space-y-1 text-xs">
+                    {[
+                      { path: 'water', label: 'Water Proof LED Lights' },
+                      { path: 'boat', label: 'Boat Lights' },
+                      { path: 'fog', label: 'Fog Lights' },
+                    ].map((product) => (
+                      <motion.li
+                        key={product.path}
+                        whileHover={{ x: 5 }}
+                      >
+                        <Link 
+                          to={`/automax/products/${product.path}`}
+                          className="block py-0.5 hover:text-red-600 transition-colors duration-200"
+                        >
+                          {product.label}
+                        </Link>
+                      </motion.li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold mb-2 text-red-500 invisible">Our Products</h3>
+                  <ul className="space-y-1 text-xs">
+                    {[
+                      { path: 'twowheeler', label: 'Two Wheeler Lights' },
+                      { path: 'converters', label: 'Converters' },
+                      { path: 'roof', label: 'Roof Lamps' },
+                    ].map((product) => (
+                      <motion.li
+                        key={product.path}
+                        whileHover={{ x: 5 }}
+                      >
+                        <Link 
+                          to={`/automax/products/${product.path}`}
+                          className="block py-0.5 hover:text-red-600 transition-colors duration-200"
+                        >
+                          {product.label}
+                        </Link>
+                      </motion.li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold mb-2 text-red-500 invisible">Our Products</h3>
+                  <ul className="space-y-1 text-xs">
+                    {[
+                      { path: 'tail', label: 'Tail Lamp Assembly' },
+                      { path: 'side', label: 'Side Indicators' },
+                      { path: 'decorative', label: 'Decorative Lights' },
+                    ].map((product) => (
+                      <motion.li
+                        key={product.path}
+                        whileHover={{ x: 5 }}
+                      >
+                        <Link 
+                          to={`/automax/products/${product.path}`}
+                          className="block py-0.5 hover:text-red-600 transition-colors duration-200"
+                        >
+                          {product.label}
+                        </Link>
+                      </motion.li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              {/* Divider Line */}
+              <hr className="border-red-600 mb-4" />
+
+              {/* Bottom: Address, Contact */}
+              <div className="grid grid-cols-3 gap-4">
+                {/* Head Office Address */}
+                <div>
+                  <h3 className="text-sm font-semibold mb-2 text-red-500">Head Office Address</h3>
+                  <p className="text-xs">123 Business Avenue</p>
+                  <p className="text-xs">Mumbai, MH, 400001</p>
+                  <p className="text-xs">India</p>
+                </div>
+
+                {/* Factory Address */}
+                <div>
+                  <h3 className="text-sm font-semibold mb-2 text-red-500">Factory Address</h3>
+                  <p className="text-xs">456 Industrial Zone</p>
+                  <p className="text-xs">Pune, MH, 411001</p>
+                  <p className="text-xs">India</p>
+                </div>
+
+                {/* Contact Us */}
+                <div>
+                  <h3 className="text-sm font-semibold mb-2 text-red-500">Contact Us</h3>
+                  <p className="text-xs flex items-center">
+                    <FaEnvelope className="mr-2 text-red-500" size={14} />
+                    <a href="mailto:contact@automax.com" className="hover:text-red-600">contact@automax.com</a>
+                  </p>
+                  <p className="text-xs flex items-center mt-1">
+                    <FaPhone className="mr-2 text-red-500" size={14} />
+                    <a href="tel:+912345678900" className="hover:text-red-600">+91 234 567 8900</a>
+                  </p>
                 </div>
               </div>
             </div>
-            <div className="border-b border-gray-300 mt-4"></div>
-          </div>
-
-          {/* Quick Links Section */}
-          <div className="pb-4">
-            <h3 className="text-lg font-semibold mb-3 text-red-500">Quick Links</h3>
-            <ul className="space-y-3">
-              {[
-                { path: '/automax/', label: 'Home' },
-                { path: '/automax/about', label: 'About' },
-                { path: '/automax/services', label: 'Gallery' },
-                { path: '/automax/contact', label: 'Contact' }
-              ].map((link) => (
-                <motion.li
-                  key={link.path}
-                  whileHover={{ x: 5 }}
-                >
-                  <Link 
-                    to={link.path}
-                    className="block py-1 hover:text-red-600 transition-colors duration-200"
-                  >
-                    {link.label}
-                  </Link>
-                </motion.li>
-              ))}
-            </ul>
-            <div className=" mt-4"></div>
-          </div>
-
-          {/* Products Section */}
-          <div className="pb-4">
-            <h3 className="text-lg font-semibold mb-3 text-red-500">Our Products</h3>
-            <ul className="space-y-3">
-              {[
-                { path: 'water', label: 'Water Proof LED Lights' },
-                { path: 'boat', label: 'Boat Lights' },
-                { path: 'fog', label: 'Fog Lights' },
-                { path: 'twowheeler', label: 'Two Wheeler Lights' },
-                { path: 'converters', label: 'Converters' },
-                { path: 'roof', label: 'Roof Lamps' },
-                { path: 'tail', label: 'Tail Lamp Assembly' },
-                { path: 'side', label: 'Side Indicators' },
-                { path: 'decorative', label: 'Decorative Lights' }
-              ].map((product) => (
-                <motion.li
-                  key={product.path}
-                  whileHover={{ x: 5 }}
-                >
-                  <Link 
-                    to={`/automax/products/${product.path}`}
-                    className="block py-1 hover:text-red-600 transition-colors duration-200"
-                  >
-                    {product.label}
-                  </Link>
-                </motion.li>
-              ))}
-            </ul>
-            <div className="border-b border-gray-300 mt-4"></div>
           </div>
         </div>
 
-        {/* Desktop View */}
-        <div className="hidden md:grid grid-cols-1 md:grid-cols-3 gap-8 text-left mt-10">
-          {/* Address Section */}
-          <div className="text-lg">
-            <h3 className="text-xl font-semibold mb-2 text-red-500">Address</h3>
-            <p>123 Street Name</p>
-            <p>City, State, ZIP</p>
-            <p>Country</p>
-            <p>Email: example@email.com</p>
-            <p>Phone: +123 456 7890</p>
-
-            {/* Follow Us Section */}
-            <div className="mt-4">
-              <h3 className="text-xl font-semibold mb-2 text-red-600">Follow Us</h3>
-              <div className="flex space-x-4">
-                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-400 transition-colors duration-200">
-                  <FaTwitter size={24} />
-                </a>
-                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-400 transition-colors duration-200">
-                  <FaFacebook size={24} />
-                </a>
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-400 transition-colors duration-200">
-                  <FaLinkedin size={24} />
-                </a>
-                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-400 transition-colors duration-200">
-                  <FaInstagram size={24} />
-                </a>
-              </div>
-            </div>
-          </div>
-          
-          {/* Quick Links Section */}
-          <div>
-            <h3 className="text-xl font-semibold mb-2 text-red-500">Quick Links</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link to="/automax/" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link to="/automax/about" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link to="/automax/services" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
-                  Gallery
-                </Link>
-              </li>
-              <li>
-                <Link to="/automax/contact" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
-                  Contact
-                </Link>
-              </li>
-            </ul>
-          </div>
-          
-          {/* Products Section */}
-          <div>
-            <h3 className="text-xl font-semibold mb-2 text-red-500">Our Products</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link to="/automax/products/water" className="block hover:text-red-600 hover:tracking-widest transition-all duration-200">
-                  Water Proof LED Lights
-                </Link>
-              </li>
-              <li>
-                <Link to="/automax/products/boat" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
-                  Boat Lights
-                </Link>
-              </li>
-              <li>
-                <Link to="/automax/products/fog" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
-                  Fog Lights
-                </Link>
-              </li>
-              <li>
-                <Link to="/automax/products/twowheeler" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
-                  Two Wheeler Lights
-                </Link>
-              </li>
-              <li>
-                <Link to="/automax/products/converters" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
-                  Converters
-                </Link>
-              </li>
-              <li>
-                <Link to="/automax/products/roof" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
-                  Roof Lamps
-                </Link>
-              </li>
-              <li>
-                <Link to="/automax/products/tail" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
-                  Tail Lamp Assembly
-                </Link>
-              </li>
-              <li>
-                <Link to="/automax/products/side" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
-                  Side Indicators
-                </Link>
-              </li>
-              <li>
-                <Link to="/automax/products/decorative" className="block hover:text-red-600  hover:tracking-widest transition-all duration-200">
-                  Decorative Lights
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </div>
-        
-        <div className="text-center mt-6 text-gray-600 text-sm">
-          ©AUTOMAX. All rights reserved.
+        {/* Copyright */}
+        <div className="text-center mt-6 text-gray-600 text-xs">
+          © AUTOMAX. All rights reserved.
         </div>
       </div>
     </footer>

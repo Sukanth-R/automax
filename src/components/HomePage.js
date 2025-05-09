@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 
 export default function HomePage() {
@@ -236,7 +235,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 text-gray-900">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-white text-gray-900">
       {/* About Automax Section (Moved to First Position) */}
       <section className="w-full px-4 sm:px-6 lg:px-20 py-12 text-black bg-gray-300">
         <div className="container mx-auto">
@@ -309,7 +308,7 @@ export default function HomePage() {
       <div className="product w-full px-4 sm:px-6 lg:px-20 py-8 sm:py-12">
         <div className="container mx-auto">
           <div className="product-left flex flex-col items-start justify-center p-6 bg-white">
-            <div className="heading text-3xl sm:text-4xl font-extrabold text-red-600 mb-4" style={{ fontFamily: "Georgia, sans-serif", fontStyle: "italic" }}>
+            <div className="heading text-3xl sm:text-4xl font-extrabold text-red-600" style={{ fontFamily: "Georgia, sans-serif", fontStyle: "italic" }}>
               <div className="relative">
                 <img
                   src="https://sukanth-r.github.io/automax/images/logo.png"
@@ -318,6 +317,10 @@ export default function HomePage() {
                 />
               </div>
               ASTRA
+            </div>
+            {/* Added Solutions Text */}
+            <div className="text-lg sm:text-lg text-black mb-4">
+              SOLUTIONS
             </div>
           </div>
           <div className="product-right mt-6 sm:mt-0">
@@ -349,78 +352,83 @@ export default function HomePage() {
       </div>
 
       {/* Main Image Carousel with Description (Moved to Second Position) */}
-      <div className="w-full h-[350px] md:h-[450px] lg:h-[500px] relative overflow-hidden">
-        <div
-          ref={carouselRef}
-          className="w-full h-full flex transition-transform duration-500 ease-out"
-          style={{ transform: `translateX(-${currentImageIndex * 100}%)` }}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-        >
-          {carouselItems.map((item, index) => (
-            <div
-              key={index}
-              className={`w-full flex-shrink-0 h-full flex flex-col md:flex-row ${item.gradient}`}
-            >
-              {index % 2 === 0 ? (
-                <>
-                  <div className="w-full md:w-1/2 h-1/2 md:h-full flex items-center justify-center p-4">
-                    <div className="bg-white bg-opacity-80 rounded-lg p-4 w-full h-full flex items-center justify-center">
-                      <img
-                        src={item.image}
-                        alt={`Slide ${index + 1}`}
-                        className="w-full h-full object-contain"
-                      />
+      <section className="w-full py-12">
+        <h2 className="text-3xl md:text-4xl font-bold text-red-600 text-center mb-8">
+          Highlights
+        </h2>
+        <div className="w-full h-[350px] md:h-[450px] lg:h-[500px] relative overflow-hidden">
+          <div
+            ref={carouselRef}
+            className="w-full h-full flex transition-transform duration-500 ease-out"
+            style={{ transform: `translateX(-${currentImageIndex * 100}%)` }}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            {carouselItems.map((item, index) => (
+              <div
+                key={index}
+                className={`w-full flex-shrink-0 h-full flex flex-col md:flex-row ${item.gradient}`}
+              >
+                {index % 2 === 0 ? (
+                  <>
+                    <div className="w-full md:w-1/2 h-1/2 md:h-full flex items-center justify-center p-4">
+                      <div className="bg-white bg-opacity-80 rounded-lg p-4 w-full h-full flex items-center justify-center">
+                        <img
+                          src={item.image}
+                          alt={`Slide ${index + 1}`}
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div className="w-full md:w-1/2 h-1/2 md:h-full flex flex-col justify-center p-6 md:p-12">
-                    <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-red-600 mb-4">
-                      {item.title}
-                    </h2>
-                    <p className="text-gray-700 text-sm md:text-base lg:text-lg mb-6">
-                      {item.description}
-                    </p>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="w-full md:w-1/2 h-1/2 md:h-full flex flex-col justify-center p-6 md:p-12 order-2 md:order-1">
-                    <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-blue-600 mb-4">
-                      {item.title}
-                    </h2>
-                    <p className="text-gray-700 text-sm md:text-base lg:text-lg mb-6">
-                      {item.description}
-                    </p>
-                  </div>
-                  <div className="w-full md:w-1/2 h-1/2 md:h-full flex items-center justify-center p-4 order-1 md:order-2">
-                    <div className="bg-white bg-opacity-80 rounded-lg p-4 w-full h-full flex items-center justify-center">
-                      <img
-                        src={item.image}
-                        alt={`Slide ${index + 1}`}
-                        className="w-full h-full object-contain"
-                      />
+                    <div className="w-full md:w-1/2 h-1/2 md:h-full flex flex-col justify-center p-6 md:p-12">
+                      <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-red-600 mb-4">
+                        {item.title}
+                      </h2>
+                      <p className="text-gray-700 text-sm md:text-base lg:text-lg mb-6">
+                        {item.description}
+                      </p>
                     </div>
-                  </div>
-                </>
-              )}
-            </div>
-          ))}
+                  </>
+                ) : (
+                  <>
+                    <div className="w-full md:w-1/2 h-1/2 md:h-full flex flex-col justify-center p-6 md:p-12 order-2 md:order-1">
+                      <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-blue-600 mb-4">
+                        {item.title}
+                      </h2>
+                      <p className="text-gray-700 text-sm md:text-base lg:text-lg mb-6">
+                        {item.description}
+                      </p>
+                    </div>
+                    <div className="w-full md:w-1/2 h-1/2 md:h-full flex items-center justify-center p-4 order-1 md:order-2">
+                      <div className="bg-white bg-opacity-80 rounded-lg p-4 w-full h-full flex items-center justify-center">
+                        <img
+                          src={item.image}
+                          alt={`Slide ${index + 1}`}
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+            {carouselItems.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentImageIndex(index)}
+                className={`w-[64px] h-2 rounded-full transition ${
+                  index === currentImageIndex
+                    ? "bg-red-600 w-6"
+                    : "bg-black bg-opacity-50"
+                }`}
+              />
+            ))}
+          </div>
         </div>
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
-          {carouselItems.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentImageIndex(index)}
-              className={`w-[64px] h-2 rounded-full transition ${
-                index === currentImageIndex
-                  ? "bg-red-600 w-6"
-                  : "bg-black bg-opacity-50"
-              }`}
-            />
-          ))}
-        </div>
-      </div>
+      </section>
 
       {/* New Arrivals Section */}
       <section className="w-full px-4 lg:px-20 py-12 relative">

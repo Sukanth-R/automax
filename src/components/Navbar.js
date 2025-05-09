@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X, ChevronDown, Search } from "lucide-react";
 import { FaPhone, FaEnvelope, FaFacebook, FaInstagram, FaTwitter, FaLinkedin } from "react-icons/fa";
-import "../index.css";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -96,15 +95,15 @@ const Navbar = () => {
       <nav className="bg-white text-black p-4 md:sticky md:top-0 md:z-50 border-b border-gray-200">
         <div className="container mx-auto md:px-10 flex justify-between items-center">
           {/* Logo - Left aligned */}
-<div className="cursor-pointer" onClick={handleLogoClick}>
-  <img 
-    src="https://sukanth-r.github.io/automax/images/logo1.png"  // Path from public folder
-    alt="AUTOMAX Logo"
-    className="h-10 w-auto object-contain"  // Maintain aspect ratio
-  />
-</div>
+          <div className="cursor-pointer" onClick={handleLogoClick}>
+            <img 
+              src="https://sukanth-r.github.io/automax/images/logo1.png"
+              alt="AUTOMAX Logo"
+              className="h-10 w-auto object-contain"
+            />
+          </div>
 
-          {/* Updated Search Bar */}
+          {/* Updated Search Bar (Desktop) */}
           <div className="hidden md:flex flex-1 mx-8 max-w-2xl search-container relative">
             <div className="relative w-full">
               <input
@@ -112,9 +111,9 @@ const Navbar = () => {
                 value={searchQuery}
                 onChange={handleSearchChange}
                 placeholder="Search Products"
-                className="w-full p-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500"
+                className="w-full p-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500 text-base"
               />
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={20} />
               
               {/* Search Results Dropdown */}
               {showSearchResults && searchQuery && (
@@ -214,38 +213,38 @@ const Navbar = () => {
 
       {/* Mobile Search Bar (Toggles when search icon clicked) */}
       <div
-        className={`md:hidden transition-all duration-300 bg-white z-50 relative ${
-          searchOpen ? "max-h-20 py-3" : "max-h-0 overflow-hidden"
+        className={`md:hidden bg-white z-[60] relative transition-all duration-300 ease-in-out ${
+          searchOpen ? "max-h-24 py-3" : "max-h-0 overflow-hidden"
         }`}
         aria-hidden={!searchOpen}
       >
-        <div className="container mx-auto px-4 search-container">
-          <div className="relative w-full">
+        <div className="container mx-auto px-4">
+          <div className="relative w-full search-container">
             <input
               type="text"
               value={searchQuery}
               onChange={handleSearchChange}
               onFocus={() => setShowSearchResults(true)}
               placeholder="Search Products"
-              className="w-full p-2 ms-10 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500"
+              className="w-full p-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500 text-sm md:text-base"
             />
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5" size={20} />
             
             {/* Mobile Search Results Dropdown */}
             {showSearchResults && searchQuery && (
-              <div className="absolute top-full left-0 right-0 bg-white mt-1 rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto z-50">
+              <div className="absolute top-full left-0 right-0 bg-white mt-1 rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto z-50 w-[calc(100vw-2rem)] mx-auto">
                 {filteredProducts.length > 0 ? (
                   filteredProducts.map((product) => (
                     <div
                       key={product.path}
                       onClick={() => handleSearchResultClick(product.path)}
-                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-800 hover:text-red-600"
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-800 hover:text-red-600 text-sm"
                     >
                       {product.label}
                     </div>
                   ))
                 ) : (
-                  <div className="px-4 py-2 text-gray-500">No products found</div>
+                  <div className="px-4 py-2 text-gray-500 text-sm">No products found</div>
                 )}
               </div>
             )}
@@ -256,7 +255,7 @@ const Navbar = () => {
       {/* Second Navbar (Navigation Links) - Hidden on Mobile */}
       <nav className="hidden md:block bg-white text-black py-3 sticky top-[72px] z-40 border-b border-gray-200 shadow-sm">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="flex items-center ms-10 space-x-8">
+          <div className="flex items-center space-x-8">
             <Link
               to="/"
               className={`hover:text-red-600 transition duration-300 ${
@@ -351,7 +350,7 @@ const Navbar = () => {
           <div className="relative">
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className={`flex items-center w-full text-black text-left py-3 px-4 text-base hover:bg-gray-100 transition duration-300 rounded-md ${
+              className={`flex items-center w-full text-black text-left py-3 px-4 text-base hover:bg-gray-100 transition duration300 rounded-md ${
                 location.pathname.startsWith("/products") ? "bg-gray-100 text-red-600 font-medium" : ""
               }`}
               aria-expanded={dropdownOpen}
