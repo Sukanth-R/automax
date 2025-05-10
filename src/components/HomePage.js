@@ -33,7 +33,17 @@ export default function HomePage() {
     { id: 6, image: "https://sparkledlights.in/img/slider/222.png", name: "Product 6" },
   ];
 
-  // Grid layout data (based on the provided HTML)
+  // Customer logos data (sample logos for automotive/lighting brands)
+  const customerLogos = [
+    { id: 1, logo: "https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" }, // BMW
+    { id: 2, logo: "https://upload.wikimedia.org/wikipedia/commons/7/7e/Toyota.svg" }, // Toyota
+    { id: 3, logo: "https://upload.wikimedia.org/wikipedia/commons/6/6d/Philips_Logo.svg" }, // Philips
+    { id: 4, logo: "https://upload.wikimedia.org/wikipedia/commons/8/8c/Mercedes-Benz_Logo.svg" }, // Mercedes-Benz
+    { id: 5, logo: "https://upload.wikimedia.org/wikipedia/commons/0/0e/Osram_Logo.svg" }, // Osram
+    { id: 6, logo: "https://upload.wikimedia.org/wikipedia/commons/1/1b/Tesla_Logo.svg" }, // Tesla
+  ];
+
+  // Grid layout data
   const gridItems = [
     {
       id: 1,
@@ -89,7 +99,7 @@ export default function HomePage() {
     { id: 6, icon: "https://www.magiklights.com/images/consumer.png", title: "CONSUMER SAFETY" },
   ];
 
-  // State for both carousels
+  // State for carousels
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentProductIndex, setCurrentProductIndex] = useState(0);
   const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
@@ -104,7 +114,6 @@ export default function HomePage() {
   // Handle window resize for responsive product and feature display
   useEffect(() => {
     const handleResize = () => {
-      // For products
       if (window.innerWidth < 640) {
         setVisibleProducts(1);
         setVisibleFeatures(1);
@@ -122,25 +131,11 @@ export default function HomePage() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Auto-advance main image carousel
+  // Combined auto-advance for all carousels
   useEffect(() => {
     const interval = setInterval(() => {
       nextImage();
-    }, 5000);
-    return () => clearInterval(interval);
-  });
-
-  // Auto-advance products carousel
-  useEffect(() => {
-    const interval = setInterval(() => {
       nextProduct();
-    }, 5000);
-    return () => clearInterval(interval);
-  });
-
-  // Auto-advance features carousel
-  useEffect(() => {
-    const interval = setInterval(() => {
       nextFeature();
     }, 5000);
     return () => clearInterval(interval);
@@ -192,7 +187,6 @@ export default function HomePage() {
     if (touchStart - touchEnd > 50) {
       nextImage();
     }
-
     if (touchStart - touchEnd < -50) {
       prevImage();
     }
@@ -210,7 +204,6 @@ export default function HomePage() {
     if (touchStart - touchEnd > 50) {
       nextProduct();
     }
-
     if (touchStart - touchEnd < -50) {
       prevProduct();
     }
@@ -228,7 +221,6 @@ export default function HomePage() {
     if (touchStart - touchEnd > 50) {
       nextFeature();
     }
-
     if (touchStart - touchEnd < -50) {
       prevFeature();
     }
@@ -236,17 +228,15 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-white text-gray-900">
-      {/* About Automax Section (Moved to First Position) */}
+      {/* About Automax Section */}
       <section className="w-full px-4 sm:px-6 lg:px-20 py-12 text-black bg-gray-300">
         <div className="container mx-auto">
           <div className="flex flex-col lg:flex-row lg:space-x-8">
-            {/* Left Side: About Automax */}
             <div className="lg:w-1/3 mb-8 lg:mb-0">
               <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-red-600">AUTOMAX</h2>
-              <p className="text-sm uppercase text-gray-800 mb-2">MANUFACTURING | MARKETING </p>
+              <p className="text-sm uppercase text-gray-800 mb-2">MANUFACTURING | MARKETING</p>
               <div className="w-16 h-1 bg-orange-400 mb-6"></div>
             </div>
-            {/* Right Side: Description and Features Carousel */}
             <div className="lg:w-2/3">
               <h3 className="text-xl sm:text-2xl font-semibold mb-4">
                 LED LIGHTS ARE THE LATEST CHOICE FOR SMART AND SUSTAINABLE FUNCTIONING.
@@ -254,7 +244,6 @@ export default function HomePage() {
               <p className="text-sm sm:text-base mb-6">
                 With LED being the new technology, LED lights are now available in a wide range to suit your home as well as the outdoor needs. Explore how Automax enhances the power of LED lights that illuminate your world with its smart solutions, the solutions empowered with innovative thinking.
               </p>
-              {/* Features Carousel */}
               <div className="relative overflow-hidden">
                 <div
                   ref={featureCarouselRef}
@@ -277,6 +266,7 @@ export default function HomePage() {
                           src={feature.icon}
                           alt={feature.title}
                           className="w-12 h-12 object-contain"
+                          loading="lazy"
                         />
                         <div className="text-gray-900 text-center">
                           <p className="font-semibold">{feature.title}</p>
@@ -285,7 +275,6 @@ export default function HomePage() {
                     </div>
                   ))}
                 </div>
-                {/* Navigation Buttons Moved Outside */}
                 <button
                   onClick={prevFeature}
                   className="absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 bg-gray-800 bg-opacity-50 text-white rounded-full hover:bg-opacity-75 transition flex items-center justify-center"
@@ -314,11 +303,11 @@ export default function HomePage() {
                   src="https://sukanth-r.github.io/automax/images/logo.png"
                   alt="ASTRA Logo"
                   className="w-16 h-16 object-contain"
+                  loading="lazy"
                 />
               </div>
               ASTRA
             </div>
-            {/* Added Solutions Text */}
             <div className="text-lg sm:text-lg text-black mb-4">
               SOLUTIONS
             </div>
@@ -332,6 +321,7 @@ export default function HomePage() {
                       src={window.innerWidth < 640 ? item.mobileImg : item.desktopImg}
                       alt={item.title}
                       className="w-full h-48 object-cover resp-pro-img"
+                      loading="lazy"
                     />
                     <div className="prod-name absolute bottom-0 left-0 right-0 bg-gray-800 bg-opacity-70 text-white text-center py-2">
                       {item.title}
@@ -351,7 +341,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Main Image Carousel with Description (Moved to Second Position) */}
+      {/* Main Image Carousel with Description */}
       <section className="w-full py-12">
         <h2 className="text-3xl md:text-4xl font-bold text-red-600 text-center mb-8">
           Highlights
@@ -378,6 +368,7 @@ export default function HomePage() {
                           src={item.image}
                           alt={`Slide ${index + 1}`}
                           className="w-full h-full object-contain"
+                          loading="lazy"
                         />
                       </div>
                     </div>
@@ -406,6 +397,7 @@ export default function HomePage() {
                           src={item.image}
                           alt={`Slide ${index + 1}`}
                           className="w-full h-full object-contain"
+                          loading="lazy"
                         />
                       </div>
                     </div>
@@ -458,6 +450,7 @@ export default function HomePage() {
                       src={product.image}
                       alt={product.name}
                       className="w-full h-auto max-h-48 object-contain"
+                      loading="lazy"
                     />
                   </div>
                   <p className="text-lg font-semibold text-red-600 mt-4 text-center">
@@ -480,6 +473,32 @@ export default function HomePage() {
         >
           ▶
         </button>
+      </section>
+
+      {/* Our Customers Section with Circular Linked List Marquee */}
+      <section className="w-full px-4 lg:px-20 py-12 bg-gray-100">
+        <h2 className="text-3xl md:text-4xl font-bold text-red-600 text-center mb-8">
+          Our Customers
+        </h2>
+        <div className="overflow-hidden">
+          <div
+            className="flex animate-marquee hover:animate-marquee-pause w-[max-content] will-change-transform"
+          >
+            {[...customerLogos, ...customerLogos, ...customerLogos].map((customer, index) => (
+              <div
+                key={`${customer.id}-${index}`}
+                className="flex-shrink-0 mx-2 flex items-center"
+              >
+                <img
+                  src={customer.logo}
+                  alt={`Customer ${customer.id}`}
+                  className="h-12 md:h-14 px-6 object-contain max-w-[100px]"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
     </div>
   );

@@ -53,10 +53,10 @@ const Footer = () => {
                 <h3 className="text-sm font-semibold mb-2 text-red-500">Quick Links</h3>
                 <ul className="space-y-1 text-xs">
                   {[
-                    { path: '/automax/', label: 'Home' },
-                    { path: '/automax/about', label: 'About' },
-                    { path: '/automax/services', label: 'Gallery' },
-                    { path: '/automax/contact', label: 'Contact' },
+                    { path: '/', label: 'Home' },
+                    { path: '/about', label: 'About' },
+                    { path: '/services', label: 'Gallery' },
+                    { path: '/contact', label: 'Contact' },
                   ].map((link) => (
                     <motion.li
                       key={link.path}
@@ -93,7 +93,7 @@ const Footer = () => {
                       whileHover={{ x: 5 }}
                     >
                       <Link 
-                        to={`/automax/products/${product.path}`}
+                        to={`/products/${product.path}`}
                         className="block py-0.5 hover:text-red-600 transition-colors duration-200"
                       >
                         {product.label}
@@ -142,10 +142,9 @@ const Footer = () => {
                   <h3 className="text-sm font-semibold mb-2 text-red-500">Quick Links</h3>
                   <ul className="space-y-1 text-xs">
                     {[
-                      { path: '/automax/', label: 'Home' },
-                      { path: '/automax/about', label: 'About' },
-                      { path: '/automax/services', label: 'Gallery' },
-                      { path: '/automax/contact', label: 'Contact' },
+                      { path: '/', label: 'Home' },
+                      { path: '/about', label: 'About' },
+                      { path: '/contact', label: 'Contact' },
                     ].map((link) => (
                       <motion.li
                         key={link.path}
@@ -176,7 +175,7 @@ const Footer = () => {
                         whileHover={{ x: 5 }}
                       >
                         <Link 
-                          to={`/automax/products/${product.path}`}
+                          to={`/products/${product.path}`}
                           className="block py-0.5 hover:text-red-600 transition-colors duration-200"
                         >
                           {product.label}
@@ -198,7 +197,7 @@ const Footer = () => {
                         whileHover={{ x: 5 }}
                       >
                         <Link 
-                          to={`/automax/products/${product.path}`}
+                          to={`/products/${product.path}`}
                           className="block py-0.5 hover:text-red-600 transition-colors duration-200"
                         >
                           {product.label}
@@ -220,7 +219,7 @@ const Footer = () => {
                         whileHover={{ x: 5 }}
                       >
                         <Link 
-                          to={`/automax/products/${product.path}`}
+                          to={`/products/${product.path}`}
                           className="block py-0.5 hover:text-red-600 transition-colors duration-200"
                         >
                           {product.label}

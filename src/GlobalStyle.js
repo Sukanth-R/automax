@@ -27,6 +27,5 @@ export const GlobalStyle = createGlobalStyle`
   p {
     font-size: 1.125rem;
     font-weight: 400;
-    max-width: 800px;
   }
 `;
