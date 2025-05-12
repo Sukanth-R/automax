@@ -1,7 +1,7 @@
 {
   "name": "automax",
   "version": "0.1.0",
-  "homepage": "https://astraautomax.in",
+  "homepage": "https://www.astraautomax.in",
   "private": true,
   "dependencies": {
     "@radix-ui/react-label": "^2.1.1",
