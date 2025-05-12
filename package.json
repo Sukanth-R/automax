@@ -1,7 +1,7 @@
 {
   "name": "automax",
   "version": "0.1.0",
-  "homepage": "https://www.astraautomax.in",
+  "homepage": "https://sukanth-r.github.io/automax",
   "private": true,
   "dependencies": {
     "@radix-ui/react-label": "^2.1.1",
