@@ -52,7 +52,7 @@ const WaterproofLEDLight = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/products");
+        const response = await fetch("https://translator-0dye.onrender.com/api/products");
         const data = await response.json();
         setProducts(data.filter(p => p.category === "Water Proof LED Lights"));
         setIsLoaded(true);
