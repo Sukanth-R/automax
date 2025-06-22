@@ -121,8 +121,10 @@ const About = () => {
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="relative w-full h-96 md:h-120 bg-gray-300 overflow-hidden"
       >
+        
         {/* Header Section */}
         <div className="absolute top-0 left-0 w-full px-4 md:px-6 lg:px-20 py-6">
+          
           <div className="flex flex-col">
             {/* Automax Info and Breadcrumb */}
             <div className="mb-4">

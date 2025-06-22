@@ -14,7 +14,6 @@ const WaterproofLEDLight = () => {
   const [currentCarousel, setCurrentCarousel] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   
-  // Change from single string to an object to track multiple expanded sections
   const [expandedSections, setExpandedSections] = useState({
     voltage: true,
     color: true
@@ -52,12 +51,16 @@ const WaterproofLEDLight = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        setIsLoaded(false); // Reset loading state when fetching starts
         const response = await fetch("https://translator-0dye.onrender.com/api/products");
         const data = await response.json();
         setProducts(data.filter(p => p.category === "Water Proof LED Lights"));
+        // Simulate loading for demo purposes (remove in production)
+        await new Promise(resolve => setTimeout(resolve, 1500));
         setIsLoaded(true);
       } catch (error) {
         console.error("Error fetching products:", error);
+        setIsLoaded(true); // Ensure loading stops even on error
       }
     };
     window.scrollTo(0, 0);
@@ -97,7 +100,7 @@ const WaterproofLEDLight = () => {
     setCurrentCarousel(prev => Math.max(prev - 1, 0));
   };
 
-  // Toggle filter section expansion - modified to handle multiple sections
+  // Toggle filter section expansion
   const toggleSection = (section) => {
     setExpandedSections(prev => ({
       ...prev,
@@ -126,35 +129,69 @@ const WaterproofLEDLight = () => {
     visible: { opacity: 1, y: 0 }
   };
 
+  // Loading animation variants
+  const loadingContainer = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+  
+  const loadingItem = {
+    hidden: { opacity: 0, y: 20 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        repeat: Infinity,
+        repeatType: "reverse",
+        duration: 0.8
+      }
+    }
+  };
+
   // Check if any filters are active
   const hasActiveFilters = filterVolt !== "all" || filterColor !== "all";
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-gray-100 flex flex-col">
-      {/* Hero Section */}
-      <section className="w-full px-4 sm:px-6 lg:px-20 py-12 text-black bg-gray-300">
-        <div className="container mx-auto">
+    <div className="min-h-screen bg-white flex flex-col">
+      {/* Hero Section with Background Image */}
+      <section
+        className="w-full px-4 sm:px-6 lg:px-20 py-12 text-black relative"
+        style={{
+          backgroundImage: `url('https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
+        {/* Overlay for text readability */}
+        <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+        <div className="container mx-auto relative z-10">
           <div className="flex flex-col lg:flex-row lg:space-x-8">
             <div className="lg:w-1/3 mb-8 lg:mb-0">
               <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-red-600">AUTOMAX</h2>
-              <p className="text-sm uppercase text-gray-800 mb-2">MANUFACTURING | MARKETING </p>
+              <p className="text-sm uppercase text-white mb-2">MANUFACTURING | MARKETING </p>
               <div className="w-16 h-1 bg-orange-400 mb-6"></div>
               <div className="flex items-center gap-2">
                 <button 
                   onClick={() => navigate('/')} 
-                  className="flex items-center gap-1 text-gray-700 hover:text-blue-600 transition-colors"
+                  className="flex items-center gap-1 text-white hover:text-blue-300 transition-colors"
                 >
                   <Home className="h-5 w-5" />
                   <span className="text-lg font-medium">Home</span>
                 </button>
-                <span className="text-lg text-gray-500">/ WATERPROOF LED LIGHTS</span>
+                <span className="text-lg text-gray-300">/ WATERPROOF LED LIGHTS</span>
               </div>
             </div>
             <div className="lg:w-2/3">
-              <h3 className="text-xl sm:text-2xl font-semibold mb-4">
+              <h3 className="text-xl sm:text-2xl font-semibold mb-4 text-white">
                 WATERPROOF LED LIGHTS
               </h3>
-              <p className="text-sm sm:text-base mb-6">
+              <p className="text-sm sm:text-base mb-6 text-gray-200">
                 Astra Waterproof LED Lights combine durability with modern lighting solutions. Perfect for outdoor spaces, bathrooms, or kitchens, they provide reliable illumination while withstanding moisture and harsh conditions. Explore our collection to find waterproof LED lights that meet your needs.
               </p>
             </div>
@@ -164,9 +201,9 @@ const WaterproofLEDLight = () => {
       
       {/* Main Content */}
       <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 bg-white relative">
-        {/* Filter Bar - Redesigned for mobile */}
+        {/* Filter Bar */}
         <div className="flex flex-col gap-3 mb-4 sm:mb-6 px-2 py-2 border-b border-gray-100">
-          {/* Top Row: Filter dropdown and Clear All button on same line */}
+          {/* Top Row: Filter dropdown and Clear All button */}
           <div className="flex items-center justify-between w-full">
             {/* Filter Dropdown */}
             <div className="relative" ref={filterDropdownRef}>
@@ -277,7 +314,7 @@ const WaterproofLEDLight = () => {
               </AnimatePresence>
             </div>
             
-            {/* Clear All Button - always in the same row as Filters */}
+            {/* Clear All Button */}
             {hasActiveFilters && (
               <button 
                 onClick={clearAllFilters}
@@ -288,7 +325,7 @@ const WaterproofLEDLight = () => {
             )}
           </div>
           
-          {/* Second Row: Active Filter Tags - Only visible when filters are active */}
+          {/* Active Filter Tags */}
           {hasActiveFilters && (
             <div className="flex flex-wrap gap-2 mt-2">
               {filterVolt !== "all" && (
@@ -321,7 +358,7 @@ const WaterproofLEDLight = () => {
             </div>
           )}
           
-          {/* Third Row: Search Input - moved below chosen filters */}
+          {/* Search Input */}
           <div className="w-full mt-3">
             <div className="relative w-full">
               <input
@@ -372,67 +409,105 @@ const WaterproofLEDLight = () => {
             )}
           </div>
 
-          {/* Products Grid */}
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate={isLoaded ? "visible" : "hidden"}
-            className="space-y-4 sm:space-y-6"
-          >
-            {productRows.map((row, rowIndex) => (
-              <div key={rowIndex} className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
-                {row.map((product) => (
-                  <motion.div
-                    key={product._id}
-                    variants={itemVariants}
-                    className="bg-white rounded-lg transition-all overflow-hidden shadow-sm hover:shadow-md"
-                  >
-                    <div className="flex flex-col h-full">
-                      {/* Product Image */}
-                      <div className="w-full h-40 sm:h-48 bg-gray-50 flex items-center justify-center">
-                        {product.image ? (
-                          <img
-                            src={`data:image/jpeg;base64,${product.image}`}
-                            alt={product.name}
-                            className="w-full h-full object-contain p-4"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
-                            Image not available
-                          </div>
-                        )}
-                      </div>
+          {/* Loading Skeleton or Products Grid */}
+          {!isLoaded ? (
+            <motion.div
+              variants={loadingContainer}
+              initial="hidden"
+              animate="show"
+              className="space-y-4 sm:space-y-6"
+            >
+              {[...Array(rowsPerCarousel)].map((_, rowIndex) => (
+                <div key={rowIndex} className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
+                  {[...Array(productsPerRow)].map((_, colIndex) => (
+                    <motion.div
+                      key={`loading-${rowIndex}-${colIndex}`}
+                      variants={loadingItem}
+                      className="bg-white rounded-lg overflow-hidden shadow-sm"
+                    >
+                      <div className="flex flex-col h-full">
+                        {/* Loading Image Placeholder */}
+                        <div className="w-full h-40 sm:h-48 bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center">
+                          <div className="w-16 h-16 rounded-full border-4 border-red-200 border-t-red-500 animate-spin"></div>
+                        </div>
 
-                      {/* Product Details */}
-                      <div className="p-3 sm:p-4 flex-grow">
-                        <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-2 line-clamp-2">
-                          {product.name}
-                        </h3>
-
-                        <div className="space-y-1 text-sm">
-                          <div className="flex items-center">
-                            <span className="text-gray-500 mr-2">Part No:</span>
-                            <span className="font-medium text-gray-700 truncate">{product.partNo}</span>
-                          </div>
-                          <div className="flex items-center">
-                            <span className="text-gray-500 mr-2">Volt:</span>
-                            <span className="font-medium text-gray-700">{product.volt}</span>
-                          </div>
-                          <div className="flex items-center">
-                            <span className="text-gray-500 mr-2">Color:</span>
-                            <div
-                              className="w-4 h-4 rounded-full border border-gray-300"
-                              style={{ backgroundColor: product.color }}
-                            />
+                        {/* Loading Text Placeholder */}
+                        <div className="p-3 sm:p-4 flex-grow space-y-3">
+                          <div className="h-6 w-3/4 bg-gradient-to-r from-red-50 to-red-100 rounded"></div>
+                          <div className="space-y-2">
+                            <div className="h-4 w-1/2 bg-gradient-to-r from-red-50 to-red-100 rounded"></div>
+                            <div className="h-4 w-2/3 bg-gradient-to-r from-red-50 to-red-100 rounded"></div>
+                            <div className="h-4 w-1/3 bg-gradient-to-r from-red-50 to-red-100 rounded"></div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            ))}
-          </motion.div>
+                    </motion.div>
+                  ))}
+                </div>
+              ))}
+            </motion.div>
+          ) : (
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate={isLoaded ? "visible" : "hidden"}
+              className="space-y-4 sm:space-y-6"
+            >
+              {productRows.map((row, rowIndex) => (
+                <div key={rowIndex} className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
+                  {row.map((product) => (
+                    <motion.div
+                      key={product._id}
+                      variants={itemVariants}
+                      className="bg-white rounded-lg transition-all overflow-hidden shadow-sm hover:shadow-md"
+                    >
+                      <div className="flex flex-col h-full">
+                        {/* Product Image */}
+                        <div className="w-full h-40 sm:h-48 bg-gray-50 flex items-center justify-center">
+                          {product.image ? (
+                            <img
+                              src={`data:image/jpeg;base64,${product.image}`}
+                              alt={product.name}
+                              className="w-full h-full object-contain p-4"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+                              Image not available
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Product Details */}
+                        <div className="p-3 sm:p-4 flex-grow">
+                          <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-2 line-clamp-2">
+                            {product.name}
+                          </h3>
+
+                          <div className="space-y-1 text-sm">
+                            <div className="flex items-center">
+                              <span className="text-gray-500 mr-2">Part No:</span>
+                              <span className="font-medium text-gray-700 truncate">{product.partNo}</span>
+                            </div>
+                            <div className="flex items-center">
+                              <span className="text-gray-500 mr-2">Volt:</span>
+                              <span className="font-medium text-gray-700">{product.volt}</span>
+                            </div>
+                            <div className="flex items-center">
+                              <span className="text-gray-500 mr-2">Color:</span>
+                              <div
+                                className="w-4 h-4 rounded-full border border-gray-300"
+                                style={{ backgroundColor: product.color }}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              ))}
+            </motion.div>
+          )}
 
           {/* Carousel Pagination Dots */}
           {totalCarousels > 1 && (

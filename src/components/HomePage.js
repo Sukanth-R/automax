@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-export default function HomePage() {
+function HomePage() {
   // Image carousel data with descriptions
   const carouselItems = [
     {
@@ -33,56 +33,46 @@ export default function HomePage() {
     { id: 6, image: "https://sparkledlights.in/img/slider/222.png", name: "Product 6" },
   ];
 
-  // Customer logos data (sample logos for automotive/lighting brands)
-  const customerLogos = [
-    { id: 1, logo: "https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" }, // BMW
-    { id: 2, logo: "https://upload.wikimedia.org/wikipedia/commons/7/7e/Toyota.svg" }, // Toyota
-    { id: 3, logo: "https://upload.wikimedia.org/wikipedia/commons/6/6d/Philips_Logo.svg" }, // Philips
-    { id: 4, logo: "https://upload.wikimedia.org/wikipedia/commons/8/8c/Mercedes-Benz_Logo.svg" }, // Mercedes-Benz
-    { id: 5, logo: "https://upload.wikimedia.org/wikipedia/commons/0/0e/Osram_Logo.svg" }, // Osram
-    { id: 6, logo: "https://upload.wikimedia.org/wikipedia/commons/1/1b/Tesla_Logo.svg" }, // Tesla
-  ];
-
   // Grid layout data
   const gridItems = [
     {
       id: 1,
-      title: "home solutions",
+      title: "Home Solutions",
       description: "Bring alive the vision of your perfect home and explore an array of options that suit every budget and need.",
       mobileImg: "https://www.magiklights.com/images/home-solutions-m.jpg",
       desktopImg: "https://www.magiklights.com/images/home-solutions.jpg"
     },
     {
       id: 2,
-      title: "office solutions",
+      title: "Office Solutions",
       description: "Make your office's environment brighter and more productive with LEDs that give the right illumination for a workplace.",
       mobileImg: "https://www.magiklights.com/images/office-solutions-m.jpg",
       desktopImg: "https://www.magiklights.com/images/office-solutions.jpg"
     },
     {
       id: 3,
-      title: "outdoor solutions",
+      title: "Outdoor Solutions",
       description: "Illuminate your outdoor with durable and weatherproof lighting solutions that create a unique and defining look.",
       mobileImg: "https://www.magiklights.com/images/outdoor-solutions-m.jpg",
       desktopImg: "https://www.magiklights.com/images/outdoor-solutions.jpg"
     },
     {
       id: 4,
-      title: "industry solutions",
+      title: "Industry Solutions",
       description: "Build a smarter industry with lighting that saves energy, reduces costs and stimulates economic development.",
       mobileImg: "https://www.magiklights.com/images/industry-solutions-m.jpg",
       desktopImg: "https://www.magiklights.com/images/industry-solutions.jpg"
     },
     {
       id: 5,
-      title: "hospitality solutions",
+      title: "Hospitality Solutions",
       description: "Meet the functional and aesthetic needs of your space and make your guests feel at home with energy-efficient solutions that accentuate every decor.",
       mobileImg: "https://www.magiklights.com/images/hospitality-solutions-m.jpg",
       desktopImg: "https://www.magiklights.com/images/hospitality-solutions.jpg"
     },
     {
       id: 6,
-      title: "retail solutions",
+      title: "Retail Solutions",
       description: "Create a strong brand identity with lighting that makes up a memorable experience for every customer.",
       mobileImg: "https://www.magiklights.com/images/retail-solutions-m.jpg",
       desktopImg: "https://www.magiklights.com/images/retail-solutions.jpg"
@@ -229,19 +219,27 @@ export default function HomePage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-white text-gray-900">
       {/* About Automax Section */}
-      <section className="w-full px-4 sm:px-6 lg:px-20 py-12 text-black bg-gray-300">
-        <div className="container mx-auto">
+      <section
+        className="w-full px-4 sm:px-6 lg:px-20 py-12 text-black relative"
+        style={{
+          backgroundImage: `url('https://static.vecteezy.com/system/resources/thumbnails/038/989/885/small_2x/ai-generated-colorful-lights-shining-brightly-in-the-dark-photo.jpeg')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div className="container mx-auto relative z-10">
           <div className="flex flex-col lg:flex-row lg:space-x-8">
             <div className="lg:w-1/3 mb-8 lg:mb-0">
-              <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-red-600">AUTOMAX</h2>
-              <p className="text-sm uppercase text-gray-800 mb-2">MANUFACTURING | MARKETING</p>
+              <h2 className="text-3xl sm:text-4xl font-bold mb-1 text-red-600">AUTOMAX</h2>
+              <p className="text-sm uppercase text-white mb-2">MANUFACTURING | MARKETING</p>
               <div className="w-16 h-1 bg-orange-400 mb-6"></div>
             </div>
             <div className="lg:w-2/3">
-              <h3 className="text-xl sm:text-2xl font-semibold mb-4">
+              <h3 className="text-xl sm:text-2xl font-semibold mb-4 text-white">
                 LED LIGHTS ARE THE LATEST CHOICE FOR SMART AND SUSTAINABLE FUNCTIONING.
               </h3>
-              <p className="text-sm sm:text-base mb-6">
+              <p className="text-sm sm:text-base mb-6 text-white">
                 With LED being the new technology, LED lights are now available in a wide range to suit your home as well as the outdoor needs. Explore how Automax enhances the power of LED lights that illuminate your world with its smart solutions, the solutions empowered with innovative thinking.
               </p>
               <div className="relative overflow-hidden">
@@ -294,42 +292,43 @@ export default function HomePage() {
       </section>
 
       {/* Product Grid Section */}
-      <div className="product w-full px-4 sm:px-6 lg:px-20 py-8 sm:py-12">
+      <div className="product w-full px-4 sm:px-6 lg:px-20 py-8 sm:py-12 bg-gray-50">
         <div className="container mx-auto">
-          <div className="product-left flex flex-col items-start justify-center p-6 bg-white">
+          <div className="product-left flex flex-col items-start justify-center p-6 bg-gray-50 mb-8">
             <div className="heading text-3xl sm:text-4xl font-extrabold text-red-600" style={{ fontFamily: "Georgia, sans-serif", fontStyle: "italic" }}>
-              <div className="relative">
+              <div className="relative flex items-center">
                 <img
                   src="https://sukanth-r.github.io/automax/images/logo.png"
                   alt="ASTRA Logo"
-                  className="w-16 h-16 object-contain"
+                  className="w-16 h-16 object-contain mr-1"
                   loading="lazy"
                 />
+                ASTRA
               </div>
-              ASTRA
             </div>
-            <div className="text-lg sm:text-lg text-black mb-4">
+            <div className="text-lg sm:text-xl text-gray-900 mt-1">
               SOLUTIONS
             </div>
+            <div className="w-16 h-1 bg-gray-900"></div>
           </div>
           <div className="product-right mt-6 sm:mt-0">
-            <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {gridItems.map((item) => (
                 <li key={item.id} className="show-responsive">
-                  <div className={`product${item.id} view relative overflow-hidden rounded-lg shadow-md hover:shadow-lg transition`}>
+                  <div className="relative overflow-hidden rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300 bg-white border border-red-100 hover:border-red-300">
                     <img
                       src={window.innerWidth < 640 ? item.mobileImg : item.desktopImg}
                       alt={item.title}
-                      className="w-full h-48 object-cover resp-pro-img"
+                      className="w-full h-56 object-cover"
                       loading="lazy"
                     />
-                    <div className="prod-name absolute bottom-0 left-0 right-0 bg-gray-800 bg-opacity-70 text-white text-center py-2">
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-red-600 to-transparent text-white text-center py-3 font-bold text-lg capitalize">
                       {item.title}
                     </div>
-                    <div className="mask absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
-                      <div className="mask-inner text-center text-white p-4">
-                        <h2 className="text-lg font-semibold mb-2">{item.title}</h2>
-                        <p className="text-sm mb-4">{item.description}</p>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-500">
+                      <div className="mask-inner text-center text-white p-6">
+                        <h2 className="text-xl font-bold mb-3 capitalize">{item.title}</h2>
+                        <p className="text-sm leading-relaxed">{item.description}</p>
                       </div>
                     </div>
                   </div>
@@ -363,7 +362,7 @@ export default function HomePage() {
                 {index % 2 === 0 ? (
                   <>
                     <div className="w-full md:w-1/2 h-1/2 md:h-full flex items-center justify-center p-4">
-                      <div className="bg-white bg-opacity-80 rounded-lg p-4 w-full h-full flex items-center justify-center">
+                      <div className="bg-opacity-80 rounded-lg p-4 w-full h-full flex items-center justify-center">
                         <img
                           src={item.image}
                           alt={`Slide ${index + 1}`}
@@ -392,7 +391,7 @@ export default function HomePage() {
                       </p>
                     </div>
                     <div className="w-full md:w-1/2 h-1/2 md:h-full flex items-center justify-center p-4 order-1 md:order-2">
-                      <div className="bg-white bg-opacity-80 rounded-lg p-4 w-full h-full flex items-center justify-center">
+                      <div className="bg-opacity-80 rounded-lg p-4 w-full h-full flex items-center justify-center">
                         <img
                           src={item.image}
                           alt={`Slide ${index + 1}`}
@@ -475,31 +474,8 @@ export default function HomePage() {
         </button>
       </section>
 
-      {/* Our Customers Section with Circular Linked List Marquee */}
-      <section className="w-full px-4 lg:px-20 py-12 bg-gray-100">
-        <h2 className="text-3xl md:text-4xl font-bold text-red-600 text-center mb-8">
-          Our Customers
-        </h2>
-        <div className="overflow-hidden">
-          <div
-            className="flex animate-marquee hover:animate-marquee-pause w-[max-content] will-change-transform"
-          >
-            {[...customerLogos, ...customerLogos, ...customerLogos].map((customer, index) => (
-              <div
-                key={`${customer.id}-${index}`}
-                className="flex-shrink-0 mx-2 flex items-center"
-              >
-                <img
-                  src={customer.logo}
-                  alt={`Customer ${customer.id}`}
-                  className="h-12 md:h-14 px-6 object-contain max-w-[100px]"
-                  loading="lazy"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
     </div>
   );
 }
+
+export default HomePage;
