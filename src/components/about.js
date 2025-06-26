@@ -1,21 +1,9 @@
 import { motion, useAnimationControls } from "framer-motion";
-import { Award, Users, Clock, Home, Play, Star, Milestone } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { Award, Users, Clock, Home, Star, Milestone } from "lucide-react";
+import { useEffect } from "react";
 
 const About = () => {
   // Sample gallery content (replace with your actual video and images)
-  const galleryVideo = {
-    src: "https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-a-city-during-the-night-39859-large.mp4", // Placeholder video
-    poster: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2073&auto=format&fit=crop", // Placeholder poster
-  };
-
-  const galleryImages = [
-    { id: 1, src: "https://images.unsplash.com/photo-1516321310767-0e7256f38719?q=80&w=2070&auto=format&fit=crop" }, // Factory
-    { id: 2, src: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=2070&auto=format&fit=crop" }, // Team
-    { id: 3, src: "https://images.unsplash.com/photo-1516321497487-e288fb19713f?q=80&w=2070&auto=format&fit=crop" }, // Product
-    { id: 4, src: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2070&auto=format&fit=crop" }, // Workshop
-    { id: 5, src: "https://images.unsplash.com/photo-1503428593587-59321a727a43?q=80&w=2070&auto=format&fit=crop" }, // Event
-  ];
 
   // Sample achievements content (replace with your actual achievements)
   const achievements = [
@@ -86,7 +74,6 @@ const About = () => {
 
   // Animation controls for marquee
   const controls = useAnimationControls();
-  const marqueeRef = useRef(null);
 
   // Start marquee animation
   useEffect(() => {
@@ -98,77 +85,77 @@ const About = () => {
     });
   }, [controls]);
 
-  // Handle hover pause/resume
-  const handleHoverStart = () => {
-    controls.stop();
-  };
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
-  const handleHoverEnd = () => {
-    controls.start({
-      x: "-50%",
-      transition: {
-        x: { repeat: Infinity, repeatType: "loop", duration: 12, ease: "linear" },
-      },
-    });
-  };
+  // Handle hover pause/resume
 
   return (
     <div className="flex min-h-screen bg-gray-100 flex-col">
       {/* Banner with Header and Cards */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="relative w-full h-96 md:h-120 bg-gray-300 overflow-hidden"
-      >
-        
-        {/* Header Section */}
-        <div className="absolute top-0 left-0 w-full px-4 md:px-6 lg:px-20 py-6">
-          
-          <div className="flex flex-col">
-            {/* Automax Info and Breadcrumb */}
-            <div className="mb-4">
-              <h2 className="text-3xl md:text-4xl font-bold text-red-600">AUTOMAX</h2>
-              <p className="text-sm uppercase text-gray-800 mb-2">MANUFACTURING | MARKETING</p>
-              <div className="w-16 h-1 bg-orange-400 mb-2"></div>
-              {/* Breadcrumb Navigation */}
-              <div className="flex items-center gap-2">
-                <Home className="h-5 w-5 text-gray-700" />
-                <span className="text-lg text-gray-700">Home</span>
-                <span className="text-lg text-gray-500">/ ABOUT US</span>
-              </div>
-            </div>
-          </div>
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.8, ease: "easeOut" }}
+  className="relative w-full h-96 md:h-120 overflow-hidden"
+  style={{
+    backgroundImage: `url('https://static.vecteezy.com/system/resources/thumbnails/038/989/885/small_2x/ai-generated-colorful-lights-shining-brightly-in-the-dark-photo.jpeg')`, // Replace with your image URL
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+  }}
+>
+  {/* Overlay for better text readability */}
+  <div className="absolute inset-0 bg-black bg-opacity-40" />
+  
+  {/* Header Section */}
+  <div className="relative z-10 top-0 left-0 w-full px-4 md:px-6 lg:px-20 py-6">
+    <div className="flex flex-col">
+      {/* Automax Info and Breadcrumb */}
+      <div className="mb-4">
+        <h2 className="text-3xl md:text-4xl font-bold text-white">AUTOMAX</h2>
+        <p className="text-sm uppercase text-gray-200 mb-2">MANUFACTURING | MARKETING</p>
+        <div className="w-16 h-1 bg-orange-400 mb-2"></div>
+        {/* Breadcrumb Navigation */}
+        <div className="flex items-center gap-2">
+          <Home className="h-5 w-5 text-gray-200" />
+          <span className="text-lg text-gray-200">Home</span>
+          <span className="text-lg text-gray-300">/ ABOUT US</span>
         </div>
+      </div>
+    </div>
+  </div>
 
-        {/* Three Cards in Banner */}
-        <div className="absolute inset-x-0 bottom-[60px] flex justify-center space-x-4 px-4 pb-4">
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="bg-red-600 text-white p-4 rounded-lg shadow-md w-1/3 min-w-[120px] flex flex-col items-center text-center"
-          >
-            <Clock className="w-8 h-8 mb-2" />
-            <h4 className="text-sm font-bold">25 Years Experience</h4>
-            <p className="text-xs">Excellence in quality and performance.</p>
-          </motion.div>
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="bg-red-600 text-white p-4 rounded-lg shadow-md w-1/3 min-w-[120px] flex flex-col items-center text-center"
-          >
-            <Award className="w-8 h-8 mb-2" />
-            <h4 className="text-sm font-bold">Award Winning</h4>
-            <p className="text-xs">Setting industry standards.</p>
-          </motion.div>
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="bg-red-600 text-white p-4 rounded-lg shadow-md w-1/3 min-w-[120px] flex flex-col items-center text-center"
-          >
-            <Users className="w-8 h-8 mb-2" />
-            <h4 className="text-sm font-bold">Dedicated Team</h4>
-            <p className="text-xs">Innovative solutions with quality.</p>
-          </motion.div>
-        </div>
-      </motion.div>
+  {/* Three Cards in Banner */}
+  <div className="relative z-10 inset-x-0 bottom-[60px] mt-[70px] flex justify-center space-x-4 px-4 pb-4">
+    <motion.div
+      whileHover={{ scale: 1.05 }}
+      className="bg-red-600 text-white p-4 rounded-lg shadow-md w-1/3 min-w-[120px] flex flex-col items-center text-center"
+    >
+      <Clock className="w-8 h-8 mb-2" />
+      <h4 className="text-sm font-bold">25 Years Experience</h4>
+      <p className="text-xs">Excellence in quality and performance.</p>
+    </motion.div>
+    <motion.div
+      whileHover={{ scale: 1.05 }}
+      className="bg-red-600 text-white p-4 rounded-lg shadow-md w-1/3 min-w-[120px] flex flex-col items-center text-center"
+    >
+      <Award className="w-8 h-8 mb-2" />
+      <h4 className="text-sm font-bold">Award Winning</h4>
+      <p className="text-xs">Setting industry standards.</p>
+    </motion.div>
+    <motion.div
+      whileHover={{ scale: 1.05 }}
+      className="bg-red-600 text-white p-4 rounded-lg shadow-md w-1/3 min-w-[120px] flex flex-col items-center text-center"
+    >
+      <Users className="w-8 h-8 mb-2" />
+      <h4 className="text-sm font-bold">Dedicated Team</h4>
+      <p className="text-xs">Innovative solutions with quality.</p>
+    </motion.div>
+  </div>
+</motion.div>
 
       {/* About Section (Overlapping Banner) */}
       <div className="container mx-auto px-4 py-4 relative">
@@ -233,58 +220,6 @@ const About = () => {
             </div>
           </div>
 
-          {/* Gallery of Moments Section */}
-          <h3 className="text-xl font-bold text-gray-800 mt-[60px] mb-4">Gallery of Moments</h3>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-            className="flex flex-col gap-6"
-          >
-            {/* Video Section */}
-            <div className="relative w-full md:w-3/4 mx-auto">
-              <video
-                className="w-full h-48 md:h-64 lg:h-80 object-cover rounded-lg shadow-lg"
-                poster={galleryVideo.poster}
-                controls
-              >
-                <source src={galleryVideo.src} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-              <motion.div
-                className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 rounded-lg"
-                whileHover={{ backgroundColor: "rgba(0, 0, 0, 0.1)" }}
-                transition={{ duration: 0.3 }}
-              >
-                <Play className="w-12 h-12 text-white opacity-80" />
-              </motion.div>
-            </div>
-
-            {/* Image Marquee Section */}
-            <div className="overflow-hidden">
-              <motion.div
-                ref={marqueeRef}
-                className="flex w-[max-content]"
-                animate={controls}
-                onHoverStart={handleHoverStart}
-                onHoverEnd={handleHoverEnd}
-              >
-                {[...galleryImages, ...galleryImages].map((image, index) => (
-                  <div
-                    key={`${image.id}-${index}`}
-                    className="flex-shrink-0 mx-4 relative hover:scale-105 transition-transform duration-300 transform-gpu z-10"
-                  >
-                    <img
-                      src={image.src}
-                      alt={`Gallery Image ${image.id}`}
-                      className="h-24 md:h-32 lg:h-40 w-40 md:w-48 lg:w-56 object-cover rounded-lg shadow-md"
-                      loading="lazy"
-                    />
-                  </div>
-                ))}
-              </motion.div>
-            </div>
-          </motion.div>
 
           {/* Our Achievements and Journey Section */}
           <h3 className="text-xl font-bold text-gray-800 mt-[60px] mb-4">Our Achievements and Journey</h3>

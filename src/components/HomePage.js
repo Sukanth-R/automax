@@ -259,7 +259,7 @@ function HomePage() {
                       className="flex-shrink-0 p-2 sm:p-4 transition-all duration-300"
                       style={{ width: `${100 / visibleFeatures}%` }}
                     >
-                      <div className="bg-white bg-opacity-90 rounded-lg p-4 flex items-center justify-center space-x-4">
+                      <div className="bg-white rounded-lg p-4 flex items-center justify-center space-x-4">
                         <img
                           src={feature.icon}
                           alt={feature.title}

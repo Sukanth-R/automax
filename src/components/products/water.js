@@ -51,16 +51,15 @@ const WaterproofLEDLight = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        setIsLoaded(false); // Reset loading state when fetching starts
+        setIsLoaded(false);
         const response = await fetch("https://translator-0dye.onrender.com/api/products");
         const data = await response.json();
         setProducts(data.filter(p => p.category === "Water Proof LED Lights"));
-        // Simulate loading for demo purposes (remove in production)
         await new Promise(resolve => setTimeout(resolve, 1500));
         setIsLoaded(true);
       } catch (error) {
         console.error("Error fetching products:", error);
-        setIsLoaded(true); // Ensure loading stops even on error
+        setIsLoaded(true);
       }
     };
     window.scrollTo(0, 0);
@@ -76,9 +75,9 @@ const WaterproofLEDLight = () => {
      p.partNo.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  // Carousel logic
-  const productsPerRow = isMobile ? 2 : 4;
-  const rowsPerCarousel = 3;
+  // Carousel logic - 6 products per row
+  const productsPerRow = isMobile ? 2 : 6;
+  const rowsPerCarousel = 2;
   const productsPerCarousel = productsPerRow * rowsPerCarousel;
   const totalCarousels = Math.ceil(filteredProducts.length / productsPerCarousel);
   const currentProducts = filteredProducts.slice(
@@ -120,10 +119,17 @@ const WaterproofLEDLight = () => {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
   };
+  
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
+    visible: { opacity: 1, y: 0 },
+    hover: { 
+      y: -5, 
+      boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)",
+      backgroundColor: "#f8fafc"
+    }
   };
+  
   const dropdownVariants = {
     hidden: { opacity: 0, y: -10 },
     visible: { opacity: 1, y: 0 }
@@ -157,7 +163,7 @@ const WaterproofLEDLight = () => {
   const hasActiveFilters = filterVolt !== "all" || filterColor !== "all";
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Hero Section with Background Image */}
       <section
         className="w-full px-4 sm:px-6 lg:px-20 py-12 text-black relative"
@@ -418,26 +424,26 @@ const WaterproofLEDLight = () => {
               className="space-y-4 sm:space-y-6"
             >
               {[...Array(rowsPerCarousel)].map((_, rowIndex) => (
-                <div key={rowIndex} className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
+                <div key={rowIndex} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 sm:gap-4 md:gap-5">
                   {[...Array(productsPerRow)].map((_, colIndex) => (
                     <motion.div
                       key={`loading-${rowIndex}-${colIndex}`}
                       variants={loadingItem}
-                      className="bg-white rounded-lg overflow-hidden shadow-sm"
+                      className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100"
                     >
                       <div className="flex flex-col h-full">
                         {/* Loading Image Placeholder */}
-                        <div className="w-full h-40 sm:h-48 bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center">
-                          <div className="w-16 h-16 rounded-full border-4 border-red-200 border-t-red-500 animate-spin"></div>
+                        <div className="w-full aspect-square bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+                          <div className="w-16 h-16 rounded-full border-4 border-gray-200 border-t-gray-400 animate-spin"></div>
                         </div>
 
                         {/* Loading Text Placeholder */}
                         <div className="p-3 sm:p-4 flex-grow space-y-3">
-                          <div className="h-6 w-3/4 bg-gradient-to-r from-red-50 to-red-100 rounded"></div>
+                          <div className="h-6 w-3/4 bg-gradient-to-r from-gray-50 to-gray-100 rounded"></div>
                           <div className="space-y-2">
-                            <div className="h-4 w-1/2 bg-gradient-to-r from-red-50 to-red-100 rounded"></div>
-                            <div className="h-4 w-2/3 bg-gradient-to-r from-red-50 to-red-100 rounded"></div>
-                            <div className="h-4 w-1/3 bg-gradient-to-r from-red-50 to-red-100 rounded"></div>
+                            <div className="h-4 w-1/2 bg-gradient-to-r from-gray-50 to-gray-100 rounded"></div>
+                            <div className="h-4 w-2/3 bg-gradient-to-r from-gray-50 to-gray-100 rounded"></div>
+                            <div className="h-4 w-1/3 bg-gradient-to-r from-gray-50 to-gray-100 rounded"></div>
                           </div>
                         </div>
                       </div>
@@ -454,52 +460,60 @@ const WaterproofLEDLight = () => {
               className="space-y-4 sm:space-y-6"
             >
               {productRows.map((row, rowIndex) => (
-                <div key={rowIndex} className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
+                <div key={rowIndex} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 sm:gap-4 md:gap-5 mx-[50px]">
                   {row.map((product) => (
                     <motion.div
                       key={product._id}
                       variants={itemVariants}
-                      className="bg-white rounded-lg transition-all overflow-hidden shadow-sm hover:shadow-md"
+                      initial="hidden"
+                      animate="visible"
+                      whileHover="hover"
+                      className="bg-white rounded-lg transition-all overflow-hidden shadow-sm border border-gray-100"
                     >
                       <div className="flex flex-col h-full">
-                        {/* Product Image */}
-                        <div className="w-full h-40 sm:h-48 bg-gray-50 flex items-center justify-center">
-                          {product.image ? (
-                            <img
-                              src={`data:image/jpeg;base64,${product.image}`}
-                              alt={product.name}
-                              className="w-full h-full object-contain p-4"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
-                              Image not available
-                            </div>
-                          )}
+                        {/* Product Image with Badge */}
+                        <div className="relative w-full aspect-square bg-gray-50 flex items-center justify-center group">
+                          <div className="absolute inset-0 overflow-hidden">
+                            {product.image ? (
+                              <img
+                                src={`data:image/jpeg;base64,${product.image}`}
+                                alt={product.name}
+                                className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+                                Image not available
+                              </div>
+                            )}
+                          </div>
                         </div>
 
                         {/* Product Details */}
-                        <div className="p-3 sm:p-4 flex-grow">
-                          <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-2 line-clamp-2">
+                        <div className="p-3 sm:p-4 flex-grow flex flex-col">
+                          <h3 className="text-sm sm:text-xl font-bold text-red-600 mb-2 line-clamp-2 hover:text-blue-600 transition-colors">
                             {product.name}
                           </h3>
 
-                          <div className="space-y-1 text-sm">
-                            <div className="flex items-center">
-                              <span className="text-gray-500 mr-2">Part No:</span>
-                              <span className="font-medium text-gray-700 truncate">{product.partNo}</span>
+                          <div className="space-y-2 text-xs sm:text-sm mb-3">
+                            <div className="flex items-center font-semibold text-gray-700">
+                              <span className="mr-1">Part No:</span>
+                              <span className="font-medium text-gray-800 truncate">{product.partNo}</span>
                             </div>
-                            <div className="flex items-center">
-                              <span className="text-gray-500 mr-2">Volt:</span>
-                              <span className="font-medium text-gray-700">{product.volt}</span>
+                            <div className="flex items-center font-semibold text-gray-700">
+                              <span className="mr-1">Volt:</span>
+                              <span className="font-medium text-gray-800">{product.volt}</span>
                             </div>
-                            <div className="flex items-center">
-                              <span className="text-gray-500 mr-2">Color:</span>
+                            <div className="flex items-center font-semibold text-gray-700">
+                              <span className="mr-1">Color:</span>
                               <div
-                                className="w-4 h-4 rounded-full border border-gray-300"
+                                className="w-8 h-4 rounded-full border border-gray-300 mr-1"
                                 style={{ backgroundColor: product.color }}
                               />
+                             
                             </div>
                           </div>
+                          
+                          
                         </div>
                       </div>
                     </motion.div>

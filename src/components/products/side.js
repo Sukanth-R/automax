@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Filter, X, ChevronLeft, ChevronRight, Home } from "lucide-react";
+import { Filter, X, ChevronLeft, ChevronRight, Search, Home, ChevronDown, ChevronUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const SIDELight = () => {
@@ -14,72 +14,67 @@ const SIDELight = () => {
   const [currentCarousel, setCurrentCarousel] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Check if mobile
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-      if (window.innerWidth >= 768) {
-        setShowFilters(true);
-      } else {
-        setShowFilters(false);
-      }
-    };
+  const [expandedSections, setExpandedSections] = useState({
+    voltage: true,
+    color: true
+  });
 
+  const filterDropdownRef = useRef(null);
+
+  // Responsive check
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Prevent body scroll when mobile filters are open
+  // Close dropdown when clicking outside
   useEffect(() => {
-    if (showFilters && isMobile) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-
-    return () => {
-      document.body.style.overflow = "auto";
+    const handleClickOutside = (event) => {
+      if (filterDropdownRef.current && !filterDropdownRef.current.contains(event.target)) {
+        setShowFilters(false);
+      }
     };
-  }, [showFilters, isMobile]);
+    if (showFilters) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showFilters]);
 
   // Fetch products
   useEffect(() => {
     window.scrollTo(0, 0);
     const fetchProducts = async () => {
       try {
+        setIsLoaded(false);
         const response = await fetch("https://translator-0dye.onrender.com/api/products");
         const data = await response.json();
-        const filteredData = data.filter(
-          (product) => product.category === "Side Indicators"
-        );
-        setProducts(filteredData);
+        setProducts(data.filter(p => p.category === "Side Indicators"));
+        await new Promise(resolve => setTimeout(resolve, 1000));
         setIsLoaded(true);
       } catch (error) {
         console.error("Error fetching products:", error);
+        setIsLoaded(true);
       }
     };
-
     fetchProducts();
   }, []);
 
-  // Get unique colors from products
-  const uniqueColors = [...new Set(products.map((product) => product.color))].filter(Boolean);
-
-  // Filter products
-  const filteredProducts = products.filter((product) => {
-    const matchesVolt =
-      filterVolt === "all" || product.volt.toLowerCase() === filterVolt.toLowerCase();
-    const matchesColor = filterColor === "all" || product.color === filterColor;
-    const matchesSearch =
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.partNo.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesVolt && matchesColor && matchesSearch;
-  });
+  // Filter logic
+  const uniqueColors = [...new Set(products.map(p => p.color))].filter(Boolean);
+  const filteredProducts = products.filter(p =>
+    (filterVolt === "all" || p.volt?.toLowerCase() === filterVolt.toLowerCase()) &&
+    (filterColor === "all" || p.color === filterColor) &&
+    (p.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.partNo?.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
 
   // Carousel logic
-  const productsPerRow = isMobile ? 2 : 4;
-  const rowsPerCarousel = 3;
+  const productsPerRow = isMobile ? 2 : 6;
+  const rowsPerCarousel = 2;
   const productsPerCarousel = productsPerRow * rowsPerCarousel;
   const totalCarousels = Math.ceil(filteredProducts.length / productsPerCarousel);
   const currentProducts = filteredProducts.slice(
@@ -87,352 +82,373 @@ const SIDELight = () => {
     (currentCarousel + 1) * productsPerCarousel
   );
 
-  // Split current products into rows
+  // Split into rows
   const productRows = [];
   for (let i = 0; i < currentProducts.length; i += productsPerRow) {
     productRows.push(currentProducts.slice(i, i + productsPerRow));
   }
 
-  const nextCarousel = () => {
-    setCurrentCarousel((prev) => Math.min(prev + 1, totalCarousels - 1));
+  const nextCarousel = () => setCurrentCarousel(prev => Math.min(prev + 1, totalCarousels - 1));
+  const prevCarousel = () => setCurrentCarousel(prev => Math.max(prev - 1, 0));
+
+  // Filter section toggle
+  const toggleSection = (section) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
   };
 
-  const prevCarousel = () => {
-    setCurrentCarousel((prev) => Math.max(prev - 1, 0));
+  // Clear all filters
+  const clearAllFilters = () => {
+    setFilterVolt("all");
+    setFilterColor("all");
+    setSearchTerm("");
   };
 
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        when: "beforeChildren",
-      },
-    },
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
   };
 
   const itemVariants = {
-    hidden: {
-      opacity: 0,
-      y: 20,
-      transition: { duration: 0.3 },
-    },
-    visible: {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+    hover: {
+      y: -5,
+      boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)"
+    }
+  };
+
+  const dropdownVariants = {
+    hidden: { opacity: 0, y: -10 },
+    visible: { opacity: 1, y: 0 }
+  };
+
+  const loadingContainer = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  };
+
+  const loadingItem = {
+    hidden: { opacity: 0, y: 20 },
+    show: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.3 },
-    },
+      transition: {
+        repeat: Infinity,
+        repeatType: "reverse",
+        duration: 0.8
+      }
+    }
   };
 
-  const filterSidebarVariants = {
-    hidden: {
-      x: "-100%",
-      opacity: 0,
-      transition: {
-        duration: 0.25,
-        ease: [0.33, 1, 0.68, 1],
-      },
-    },
-    visible: {
-      x: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.3,
-        ease: [0.33, 1, 0.68, 1],
-      },
-    },
-  };
-
-  const overlayVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 0.5,
-      transition: { duration: 0.2 },
-    },
-  };
-
-  const containerWidthVariants = {
-    expanded: {
-      width: "75%",
-      transition: {
-        duration: 0.3,
-        ease: [0.33, 1, 0.68, 1],
-      },
-    },
-    collapsed: {
-      width: "100%",
-      transition: {
-        duration: 0.3,
-        ease: [0.33, 1, 0.68, 1],
-      },
-    },
-  };
+  const hasActiveFilters = filterVolt !== "all" || filterColor !== "all";
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-gray-100 flex flex-col">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Hero Section */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1, ease: "easeOut" }}
-        className="relative w-full h-72 md:h-96 overflow-hidden"
+      <section
+        className="w-full px-4 sm:px-6 lg:px-20 py-12 text-black relative"
+        style={{
+          backgroundImage: `url('https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
       >
-        <img
-          src="https://t3.ftcdn.net/jpg/09/85/53/02/240_F_985530270_SgZsAuSMfXttrmIvPtbGU85hYBxygx6I.jpg"
-          alt="Side Indicators Banner"
-          className="w-full h-full object-cover transform transition-transform duration-1000 hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-900/70 to-transparent flex items-center justify-center">
-          <motion.h1
-            initial={{ y: -50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.5, duration: 0.8 }}
-            className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-extrabold text-center px-4 drop-shadow-lg"
-          >
-            SIDE INDICATORS
-          </motion.h1>
-        </div>
-      </motion.div>
-
-      {/* Logo Section */}
-      <section className="w-full bg-white px-6 lg:px-20 py-12 flex flex-col md:flex-row items-center justify-center gap-4 sm:gap-8">
-        <div className="flex-shrink-0 w-32 sm:w-40 md:w-48 flex justify-center">
-          <img
-            src="/images/logo.png"
-            alt="Logo"
-            className="w-full h-auto object-contain rounded-lg"
-          />
-        </div>
-        <div className="w-full sm:w-auto flex justify-center">
-          <h3
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[100px] font-extrabold text-red-700"
-            style={{ fontFamily: "Georgia, sans-serif", fontStyle: "italic" }}
-          >
-            ASTRA
-          </h3>
-        </div>
-      </section>
-
-      {/* Navigation and Description Section */}
-      <section className="w-full bg-white px-4 sm:px-6 lg:px-20 py-6 sm:py-8">
-        <div className="max-w-8xl mx-auto flex flex-col sm:flex-row items-start gap-4 sm:gap-8">
-          {/* Navigation Breadcrumb - Left Side */}
-          <div className="flex items-center gap-2">
-            <button 
-              onClick={() => navigate('/')} 
-              className="flex items-center gap-1 text-gray-700 hover:text-orange-600 transition-colors"
-            >
-              <Home className="h-5 w-5" />
-              <span className="text-lg font-medium">Home</span>
-            </button>
-            <span className="text-lg text-gray-500">/ Side Indicators</span>
-          </div>
-
-          {/* Description - Right Side */}
-          <div className="flex-1 text-base sm:text-lg text-gray-700">
-            Astra Side Indicators provide enhanced visibility and safety for your vehicle. 
-            These durable and weather-resistant lights ensure clear signaling to other 
-            road users. Designed for easy installation and long-lasting performance in 
-            all driving conditions.
+        <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+        <div className="container mx-auto relative z-10">
+          <div className="flex flex-col lg:flex-row lg:space-x-8">
+            <div className="lg:w-1/3 mb-8 lg:mb-0">
+              <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-red-600">AUTOMAX</h2>
+              <p className="text-sm uppercase text-white mb-2">SIDE INDICATORS</p>
+              <div className="w-16 h-1 bg-orange-400 mb-6"></div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => navigate('/')}
+                  className="flex items-center gap-1 text-white hover:text-blue-300 transition-colors"
+                >
+                  <Home className="h-5 w-5" />
+                  <span className="text-lg font-medium">Home</span>
+                </button>
+                <span className="text-lg text-gray-300">/ SIDE INDICATORS</span>
+              </div>
+            </div>
+            <div className="lg:w-2/3">
+              <h3 className="text-xl sm:text-2xl font-semibold mb-4 text-white">
+                SIDE INDICATORS
+              </h3>
+              <p className="text-sm sm:text-base mb-6 text-gray-200">
+                Astra Side Indicators provide enhanced visibility and safety for your vehicle. These durable and weather-resistant lights ensure clear signaling to other road users. Designed for easy installation and long-lasting performance in all driving conditions.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Main Content */}
       <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 bg-white relative">
-        {/* Filter and Search Section */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 sm:mb-6 gap-3 sm:gap-4">
-          <motion.button
-            onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 bg-gray-100 hover:bg-gray-200 rounded-lg w-fit"
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 10 }}
-          >
-            <Filter className="h-4 w-4 sm:h-5 sm:w-5" />
-            <span className="text-sm sm:text-base">
-              {showFilters ? "Hide Filters" : "Show Filters"}
-            </span>
-          </motion.button>
+        {/* Filter Bar */}
+        <div className="flex flex-col gap-3 mb-4 sm:mb-6 px-2 py-2 border-b border-gray-100">
+          <div className="flex items-center justify-between w-full">
+            {/* Filter Dropdown */}
+            <div className="relative" ref={filterDropdownRef}>
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className="flex items-center h-10 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full gap-2 text-gray-700"
+              >
+                <Filter className="h-4 w-4" />
+                <span className="text-sm font-medium">Filters</span>
+                <ChevronDown className="h-4 w-4" />
+              </button>
 
-          <div className="w-full md:w-1/3">
-            <input
-              type="text"
-              placeholder="Search by name or part number..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full p-2 sm:p-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
-            />
-          </div>
-        </div>
-
-        <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8 relative">
-          {/* Filters Sidebar */}
-          <AnimatePresence mode="wait">
-            {showFilters && (
-              <>
-                <motion.div
-                  key="sidebar"
-                  initial="hidden"
-                  animate="visible"
-                  exit="hidden"
-                  variants={filterSidebarVariants}
-                  className="fixed lg:relative z-50 lg:z-auto inset-y-0 left-0 w-72 sm:w-80 lg:w-1/4 bg-white p-4 sm:p-6 shadow-lg lg:shadow-none overflow-y-auto h-screen lg:h-auto"
-                >
-                  <div className="flex justify-between items-center mb-4 sm:mb-6">
-                    <h2 className="text-lg sm:text-xl font-bold">Filters</h2>
-                    <button
-                      onClick={() => setShowFilters(false)}
-                      className="text-gray-500 hover:text-gray-700 lg:hidden p-1"
-                    >
-                      <X className="h-5 w-5" />
-                    </button>
-                  </div>
-
-                  {/* Voltage Filter */}
-                  <div className="mb-4 sm:mb-6">
-                    <h3 className="font-semibold mb-2 sm:mb-3">Voltage</h3>
-                    <div className="space-y-4 sm:space-y-6">
-                      {["all", "12V", "24V"].map((volt) => (
-                        <div key={volt} className="flex items-center">
-                          <input
-                            type="radio"
-                            id={`${volt}-filter`}
-                            name="volt"
-                            className="mr-2 h-5 w-5 sm:h-6 sm:w-6"
-                            checked={filterVolt === volt}
-                            onChange={() => setFilterVolt(volt)}
-                          />
-                          <label htmlFor={`${volt}-filter`} className="text-sm sm:text-base">
-                            {volt === "all" ? "All Volts" : volt}
-                          </label>
+              <AnimatePresence>
+                {showFilters && (
+                  <motion.div
+                    initial="hidden"
+                    animate="visible"
+                    exit="hidden"
+                    variants={dropdownVariants}
+                    className="absolute z-50 top-12 left-0 w-64 sm:w-80 bg-white shadow-lg rounded-lg overflow-hidden"
+                  >
+                    <div className="max-h-96 overflow-y-auto">
+                      {/* Voltage Filter */}
+                      <div className="p-4 border-b border-gray-100">
+                        <div
+                          className="flex justify-between items-center cursor-pointer mb-3"
+                          onClick={() => toggleSection("voltage")}
+                        >
+                          <h3 className="font-medium">Voltage</h3>
+                          {expandedSections.voltage ?
+                            <ChevronUp className="h-4 w-4 text-gray-500" /> :
+                            <ChevronDown className="h-4 w-4 text-gray-500" />
+                          }
                         </div>
-                      ))}
+                        {expandedSections.voltage && (
+                          <div className="space-y-3">
+                            {["all", "12V", "24V"].map((volt) => (
+                              <div key={volt} className="flex items-center">
+                                <input
+                                  type="radio"
+                                  id={`volt-${volt}`}
+                                  name="volt"
+                                  className="w-5 h-5 text-red-500 focus:ring-red-400"
+                                  checked={filterVolt === volt}
+                                  onChange={() => setFilterVolt(volt)}
+                                />
+                                <label htmlFor={`volt-${volt}`} className="ml-2 text-sm text-gray-700">
+                                  {volt === "all" ? "All Volts" : volt}
+                                </label>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      {/* Color Filter */}
+                      <div className="p-4 border-b border-gray-100">
+                        <div
+                          className="flex justify-between items-center cursor-pointer mb-3"
+                          onClick={() => toggleSection("color")}
+                        >
+                          <h3 className="font-medium">Color</h3>
+                          {expandedSections.color ?
+                            <ChevronUp className="h-4 w-4 text-gray-500" /> :
+                            <ChevronDown className="h-4 w-4 text-gray-500" />
+                          }
+                        </div>
+                        {expandedSections.color && (
+                          <div className="flex flex-wrap gap-3">
+                            <motion.button
+                              onClick={() => setFilterColor("all")}
+                              className={`relative w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all ${
+                                filterColor === "all" ? "border-blue-500 scale-110" : "border-gray-200 hover:border-gray-400"
+                              }`}
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.95 }}
+                              title="All Colors"
+                            >
+                              <div className="w-6 h-6 rounded-full bg-gradient-to-br from-red-500 via-green-500 to-blue-500"></div>
+                              <span className="sr-only">All Colors</span>
+                            </motion.button>
+                            {uniqueColors.map((color) => (
+                              <motion.button
+                                key={color}
+                                onClick={() => setFilterColor(color)}
+                                className={`relative w-8 h-8 rounded-full border-2 transition-all group ${
+                                  filterColor === color ? "border-blue-500 scale-110" : "border-gray-200 hover:border-gray-400"
+                                }`}
+                                style={{ backgroundColor: color }}
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.95 }}
+                              />
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      <div className="p-3 bg-gray-50 text-sm text-gray-500">
+                        Showing {filteredProducts.length} out of {products.length} products
+                      </div>
                     </div>
-                  </div>
-
-                  {/* Color Filter */}
-                  <div className="mb-4 sm:mb-6">
-                    <h3 className="font-semibold mb-2 sm:mb-3">Color</h3>
-                    <div className="flex flex-wrap gap-2 sm:gap-3">
-                      {/* All Colors Button */}
-                      <motion.button
-                        onClick={() => setFilterColor("all")}
-                        className={`relative w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 flex items-center justify-center transition-all ${
-                          filterColor === "all"
-                            ? "border-orange-500 scale-110"
-                            : "border-gray-200 hover:border-gray-400"
-                        }`}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                        title="All Colors"
-                      >
-                        <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-gradient-to-br from-red-500 via-green-500 to-blue-500"></div>
-                        <span className="sr-only">All Colors</span>
-                      </motion.button>
-
-                      {/* Color Buttons */}
-                      {uniqueColors.map((color) => (
-                        <motion.button
-                          key={color}
-                          onClick={() => setFilterColor(color)}
-                          className={`relative w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 transition-all group ${
-                            filterColor === color
-                              ? "border-orange-500 scale-110"
-                              : "border-gray-200 hover:border-gray-400"
-                          }`}
-                          style={{ backgroundColor: color }}
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.95 }}
-                        />
-                      ))}
-                    </div>
-                  </div>
-
-                  <p className="text-xs sm:text-sm text-gray-500 mt-4 sm:mt-6">
-                    Showing {filteredProducts.length} out of {products.length} products
-                  </p>
-                </motion.div>
-
-                {/* Overlay for mobile/tablet */}
-                <motion.div
-                  key="overlay"
-                  initial="hidden"
-                  animate="visible"
-                  exit="hidden"
-                  variants={overlayVariants}
-                  className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-                  onClick={() => setShowFilters(false)}
-                />
-              </>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+            {/* Clear All Button */}
+            {hasActiveFilters && (
+              <button
+                onClick={clearAllFilters}
+                className="h-10 px-4 py-2 text-sm font-medium text-red-500 hover:text-red-700"
+              >
+                Clear All
+              </button>
             )}
-          </AnimatePresence>
-
-          {/* Products List */}
-          <motion.div
-            variants={containerWidthVariants}
-            animate={showFilters ? "expanded" : "collapsed"}
-            className="w-full"
-          >
-            {/* Products Count and Carousel Controls */}
-            <div className="flex justify-between items-center mb-4 sm:mb-6">
-              <div className="text-sm sm:text-base text-gray-600">
-                Showing {filteredProducts.length} of {products.length} products
-              </div>
-              
-              {totalCarousels > 1 && (
-                <div className="flex items-center gap-2 sm:gap-4">
+          </div>
+          {/* Active Filter Tags */}
+          {hasActiveFilters && (
+            <div className="flex flex-wrap gap-2 mt-2">
+              {filterVolt !== "all" && (
+                <div className="flex items-center h-8 px-3 py-1 bg-gray-50 rounded-full gap-2">
+                  <span className="text-sm font-medium">Voltage: {filterVolt}</span>
                   <button
-                    onClick={prevCarousel}
-                    disabled={currentCarousel === 0}
-                    className={`p-2 sm:p-3 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed ${
-                      isMobile ? "text-2xl" : ""
-                    }`}
+                    onClick={() => setFilterVolt("all")}
+                    className="text-gray-500 hover:text-gray-700"
                   >
-                    <ChevronLeft className={`${isMobile ? "h-6 w-6" : "h-5 w-5"}`} />
+                    <X className="h-4 w-4" />
                   </button>
-                  
-                  <div className="text-sm sm:text-base font-medium text-gray-700">
-                    Page {currentCarousel + 1} of {totalCarousels}
-                  </div>
-                  
+                </div>
+              )}
+              {filterColor !== "all" && (
+                <div className="flex items-center h-8 px-3 py-1 bg-gray-50 rounded-full gap-2">
+                  <span className="text-sm font-medium">Color:</span>
+                  <div
+                    className="w-4 h-4 rounded-full"
+                    style={{ backgroundColor: filterColor }}
+                  ></div>
                   <button
-                    onClick={nextCarousel}
-                    disabled={currentCarousel === totalCarousels - 1}
-                    className={`p-2 sm:p-3 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed ${
-                      isMobile ? "text-2xl" : ""
-                    }`}
+                    onClick={() => setFilterColor("all")}
+                    className="text-gray-500 hover:text-gray-700"
                   >
-                    <ChevronRight className={`${isMobile ? "h-6 w-6" : "h-5 w-5"}`} />
+                    <X className="h-4 w-4" />
                   </button>
                 </div>
               )}
             </div>
+          )}
+          {/* Search Input */}
+          <div className="w-full mt-3">
+            <div className="relative w-full">
+              <input
+                type="text"
+                placeholder="Search by name or part number..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full h-10 pl-9 pr-3 text-sm border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+              />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={16} />
+            </div>
+          </div>
+        </div>
 
-            {/* Products Grid */}
-            <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              animate={isLoaded ? "visible" : "hidden"}
-              className="space-y-4 sm:space-y-6"
-            >
-              {productRows.map((row, rowIndex) => (
-                <div key={rowIndex} className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
-                  {row.map((product) => (
-                    <motion.div
-                      key={product._id}
-                      variants={itemVariants}
-                      className="bg-white rounded-lg transition-all overflow-hidden"
-                    >
-                      <div className="flex flex-col h-full">
-                        {/* Product Image */}
-                        <div className="w-full h-40 sm:h-48 bg-white flex items-center justify-center">
+        {/* Products Count and Carousel Controls */}
+        <div className="flex justify-between items-center mb-4 sm:mb-6">
+          <div className="text-sm sm:text-base text-gray-600">
+            Showing {filteredProducts.length} out of {products.length} products
+          </div>
+          {totalCarousels > 1 && (
+            <div className="flex items-center gap-2 sm:gap-4">
+              <button
+                onClick={prevCarousel}
+                disabled={currentCarousel === 0}
+                className={`p-2 sm:p-3 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+                  isMobile ? "text-2xl" : ""
+                }`}
+              >
+                <ChevronLeft className={`${isMobile ? "h-6 w-6" : "h-5 w-5"}`} />
+              </button>
+              <div className="text-sm sm:text-base font-medium text-gray-700">
+                Page {currentCarousel + 1} of {totalCarousels}
+              </div>
+              <button
+                onClick={nextCarousel}
+                disabled={currentCarousel === totalCarousels - 1}
+                className={`p-2 sm:p-3 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+                  isMobile ? "text-2xl" : ""
+                }`}
+              >
+                <ChevronRight className={`${isMobile ? "h-6 w-6" : "h-5 w-5"}`} />
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Loading Skeleton or Products Grid */}
+        {!isLoaded ? (
+          <motion.div
+            variants={loadingContainer}
+            initial="hidden"
+            animate="show"
+            className="space-y-4 sm:space-y-6"
+          >
+            {[...Array(rowsPerCarousel)].map((_, rowIndex) => (
+              <div key={rowIndex} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 sm:gap-4 md:gap-5">
+                {[...Array(productsPerRow)].map((_, colIndex) => (
+                  <motion.div
+                    key={`loading-${rowIndex}-${colIndex}`}
+                    variants={loadingItem}
+                    className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100"
+                  >
+                    <div className="flex flex-col h-full">
+                      {/* Loading Image Placeholder */}
+                      <div className="w-full aspect-square bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+                        <div className="w-16 h-16 rounded-full border-4 border-gray-200 border-t-gray-400 animate-spin"></div>
+                      </div>
+                      {/* Loading Text Placeholder */}
+                      <div className="p-3 sm:p-4 flex-grow space-y-3">
+                        <div className="h-6 w-3/4 bg-gradient-to-r from-gray-50 to-gray-100 rounded"></div>
+                        <div className="space-y-2">
+                          <div className="h-4 w-1/2 bg-gradient-to-r from-gray-50 to-gray-100 rounded"></div>
+                          <div className="h-4 w-2/3 bg-gradient-to-r from-gray-50 to-gray-100 rounded"></div>
+                          <div className="h-4 w-1/3 bg-gradient-to-r from-gray-50 to-gray-100 rounded"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            ))}
+          </motion.div>
+        ) : (
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate={isLoaded ? "visible" : "hidden"}
+            className="space-y-4 sm:space-y-6"
+          >
+            {productRows.map((row, rowIndex) => (
+              <div key={rowIndex} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 sm:gap-4 md:gap-5 mx-[50px]">
+                {row.map((product) => (
+                  <motion.div
+                    key={product._id}
+                    variants={itemVariants}
+                    initial="hidden"
+                    animate="visible"
+                    whileHover="hover"
+                    className="bg-white hover:bg-red-600 transition-all overflow-hidden shadow-sm border border-gray-100 group rounded-lg"
+                  >
+                    <div className="flex flex-col h-full">
+                      {/* Product Image */}
+                      <div className="relative w-full aspect-square bg-gray-50 flex items-center justify-center group">
+                        <div className="absolute inset-0 overflow-hidden">
                           {product.image ? (
                             <img
                               src={`data:image/jpeg;base64,${product.image}`}
                               alt={product.name}
-                              className="w-full h-full object-contain"
+                              className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
                             />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
@@ -440,70 +456,53 @@ const SIDELight = () => {
                             </div>
                           )}
                         </div>
-
-                        {/* Product Details */}
-                        <div className="p-3 sm:p-4 flex-grow">
-                          <h3 className="text-sm sm:text-base font-semibold mb-2 line-clamp-2">
-                            {product.name}
-                          </h3>
-
-                          {/* Quick Details */}
-                          <div className="grid grid-cols-2 gap-2 text-xs sm:text-sm">
-                            <div>
-                              <p className="text-gray-600">Part No:</p>
-                              <p className="font-medium">{product.partNo}</p>
-                            </div>
-                            <div>
-                              <p className="text-gray-600">Voltage:</p>
-                              <p className="font-medium">{product.volt}</p>
-                            </div>
-                            <div>
-                              <p className="text-gray-600">Color:</p>
-                              <div className="flex items-center gap-1 mt-1">
-                                <div
-                                  className="w-4 h-4 rounded-full border border-gray-300"
-                                  style={{ backgroundColor: product.color }}
-                                />
-                              </div>
-                            </div>
-                            <div>
-                              <p className="text-xs sm:text-sm text-gray-600 mt-1">
-                                <span className="font-medium">Stock:</span>{" "}
-                                <span
-                                  className={`${
-                                    product.stock > 0 ? "text-green-600" : "text-red-600"
-                                  } font-semibold`}
-                                >
-                                  {product.stock > 0 ? `${product.stock} In Stock` : "Out of Stock"}
-                                </span>
-                              </p>
-                            </div>
+                      </div>
+                      {/* Product Details */}
+                      <div className="p-3 sm:p-4 flex-grow flex flex-col group-hover:text-white">
+                        <h3 className="text-sm sm:text-xl font-bold text-red-600 mb-2 line-clamp-2 group-hover:text-white transition-colors">
+                          {product.name}
+                        </h3>
+                        <div className="space-y-2 text-xs sm:text-sm mb-3">
+                          <div className="flex items-center font-semibold text-gray-700 group-hover:text-white">
+                            <span className="mr-1">Part No:</span>
+                            <span className="font-medium text-gray-800 truncate group-hover:text-white">{product.partNo}</span>
+                          </div>
+                          <div className="flex items-center font-semibold text-gray-700 group-hover:text-white">
+                            <span className="mr-1">Volt:</span>
+                            <span className="font-medium text-gray-800 group-hover:text-white">{product.volt}</span>
+                          </div>
+                          <div className="flex items-center font-semibold text-gray-700 group-hover:text-white">
+                            <span className="mr-1">Color:</span>
+                            <div
+                              className="w-8 h-4 rounded-full border border-gray-300 mr-1"
+                              style={{ backgroundColor: product.color }}
+                            />
                           </div>
                         </div>
                       </div>
-                    </motion.div>
-                  ))}
-                </div>
-              ))}
-            </motion.div>
-
-            {/* Carousel Pagination Dots */}
-            {totalCarousels > 1 && (
-              <div className="flex justify-center mt-4 sm:mt-6 gap-2">
-                {Array.from({ length: totalCarousels }).map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentCarousel(index)}
-                    className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full ${
-                      index === currentCarousel ? "bg-orange-500" : "bg-gray-300"
-                    }`}
-                    aria-label={`Go to page ${index + 1}`}
-                  />
+                    </div>
+                  </motion.div>
                 ))}
               </div>
-            )}
+            ))}
           </motion.div>
-        </div>
+        )}
+
+        {/* Carousel Pagination Dots */}
+        {totalCarousels > 1 && (
+          <div className="flex justify-center mt-6 gap-2">
+            {Array.from({ length: totalCarousels }).map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentCarousel(index)}
+                className={`w-3 h-3 rounded-full transition-colors ${
+                  index === currentCarousel ? "bg-blue-600" : "bg-gray-300 hover:bg-gray-400"
+                }`}
+                aria-label={`Go to page ${index + 1}`}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

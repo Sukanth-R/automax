@@ -14,7 +14,7 @@ const Footer = () => {
       }}
     >
       {/* Overlay for text readability */}
-      <div className="absolute inset-0 bg-black bg-opacity-80"></div>
+      <div className="absolute inset-0 bg-black sm:bg-opacity-90 bg-opacity-50"></div>
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Main Container: Split into Left and Right */}
         <div className="flex flex-col md:flex-row gap-6">
@@ -60,7 +60,7 @@ const Footer = () => {
             <div className="block md:hidden space-y-4">
               {/* Quick Links */}
               <div>
-                <h3 className="text-sm font-semibold mb-2 text-red-400">Quick Links</h3>
+                <h3 className="text-sm font-semibold mb-2 text-red-600">Quick Links</h3>
                 <ul className="space-y-1 text-xs">
                   {[
                     { path: '/', label: 'Home' },
@@ -133,11 +133,11 @@ const Footer = () => {
               <div>
                 <h3 className="text-sm font-semibold mb-2 text-red-600">Contact Us</h3>
                 <p className="text-xs flex items-center justify-start md:justify-start">
-                  <FaEnvelope className="mr-2 text-red-400" size={14} />
+                  <FaEnvelope className="mr-2 text-red-600" size={14} />
                   <a href="mailto:contact@automax.com" className="hover:text-red-400">contact@automax.com</a>
                 </p>
                 <p className="text-xs flex items-center justify-start md:justify-start">
-                  <FaPhone className="mr-2 text-red-400" size={14} />
+                  <FaPhone className="mr-2 text-red-600" size={14} />
                   <a href="tel:+912345678900" className="hover:text-red-400">+91 234 567 8900</a>
                 </p>
               </div>
@@ -265,11 +265,11 @@ const Footer = () => {
                 <div>
                   <h3 className="text-sm font-semibold mb-2 text-red-600">Contact Us</h3>
                   <p className="text-xs flex items-center">
-                    <FaEnvelope className="mr-2 text-red-400" size={14} />
+                    <FaEnvelope className="mr-2 text-red-600" size={14} />
                     <a href="mailto:contact@automax.com" className="hover:text-red-400">contact@automax.com</a>
                   </p>
                   <p className="text-xs flex items-center mt-1">
-                    <FaPhone className="mr-2 text-red-400" size={14} />
+                    <FaPhone className="mr-2 text-red-600" size={14} />
                     <a href="tel:+912345678900" className="hover:text-red-400">+91 234 567 8900</a>
                   </p>
                 </div>
