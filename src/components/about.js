@@ -269,7 +269,7 @@ const About = () => {
                     className={`flex items-center mb-8 ${index % 2 === 0 ? "justify-start" : "justify-end"}`}
                   >
                     <div
-                      className={`w-full md:w-5/12 p-4 bg-gray-50 rounded-lg shadow-sm border border-gray-100 relative ${
+                      className={`w-full md:w-5/12 p-4 bg-gray-200 sm:mx-[100px] rounded-lg shadow-sm border border-gray-100 relative ${
                         index % 2 === 0 ? "mr-auto" : "ml-auto"
                       }`}
                     >

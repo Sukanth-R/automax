@@ -50,9 +50,28 @@ const BOATLight = () => {
     const fetchProducts = async () => {
       try {
         setIsLoaded(false);
+
+        // Check cache
+        const cachedData = localStorage.getItem('boatLights');
+        const cacheTimestamp = localStorage.getItem('boatLightsTimestamp');
+        const cacheExpiry = 60 * 60 * 1000; // 1 hour in milliseconds
+
+        if (cachedData && cacheTimestamp) {
+          const age = Date.now() - parseInt(cacheTimestamp, 10);
+          if (age < cacheExpiry) {
+            setProducts(JSON.parse(cachedData));
+            setIsLoaded(true);
+            return;
+          }
+        }
+
+        // Fetch fresh data
         const response = await fetch("https://translator-0dye.onrender.com/api/products");
         const data = await response.json();
-        setProducts(data.filter(p => p.category === "Boat Lights"));
+        const filtered = data.filter(p => p.category === "Boat Lights");
+        localStorage.setItem('boatLights', JSON.stringify(filtered));
+        localStorage.setItem('boatLightsTimestamp', Date.now().toString());
+        setProducts(filtered);
         await new Promise(resolve => setTimeout(resolve, 1000));
         setIsLoaded(true);
       } catch (error) {
@@ -154,7 +173,7 @@ const BOATLight = () => {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Hero Section */}
       <section
-        className="w-full px-4 sm:px-6 lg:px-20 py-12 text-black relative"
+        className="w-full sm:h-[400px] px-4 sm:px-6 lg:px-20 py-12 text-black relative"
         style={{
           backgroundImage: `url('https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')`,
           backgroundSize: 'cover',
@@ -425,68 +444,68 @@ const BOATLight = () => {
           </motion.div>
         ) : (
           <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate={isLoaded ? "visible" : "hidden"}
-            className="space-y-4 sm:space-y-6"
-          >
-            {productRows.map((row, rowIndex) => (
-              <div key={rowIndex} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 sm:gap-4 md:gap-5 mx-[50px]">
-                {row.map((product) => (
-                  <motion.div
-                    key={product._id}
-                    variants={itemVariants}
-                    initial="hidden"
-                    animate="visible"
-                    whileHover="hover"
-                    className="bg-white transition-all overflow-hidden shadow-sm border border-gray-100 group rounded-lg"
-                  >
-                    <div className="flex flex-col h-full">
-                      {/* Product Image */}
-                      <div className="relative w-full aspect-square bg-gray-50 flex items-center justify-center group">
-                        <div className="absolute inset-0 overflow-hidden">
-                          {product.image ? (
-                            <img
-                              src={`data:image/jpeg;base64,${product.image}`}
-                              alt={product.name}
-                              className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
-                              Image not available
-                            </div>
-                          )}
+                      variants={containerVariants}
+                      initial="hidden"
+                      animate={isLoaded ? "visible" : "hidden"}
+                      className="space-y-4 sm:space-y-6"
+                    >
+                      {productRows.map((row, rowIndex) => (
+                        <div key={rowIndex} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 sm:gap-4 md:gap-5 sm:mx-[50px]">
+                          {row.map((product) => (
+                            <motion.div
+                              key={product._id}
+                              variants={itemVariants}
+                              initial="hidden"
+                              animate="visible"
+                              whileHover="hover"
+                              className="bg-white transition-all overflow-hidden shadow-sm rounded-lg"
+                            >
+                              <div className="flex flex-col h-full">
+                                {/* Product Image */}
+                                <div className="relative w-full aspect-square bg-white flex items-center justify-center group">
+                                  <div className="absolute inset-0 overflow-hidden">
+                                    {product.image ? (
+                                      <img
+                                        src={`data:image/jpeg;base64,${product.image}`}
+                                        alt={product.name}
+                                        className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+                                      />
+                                    ) : (
+                                      <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+                                        Image not available
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                                {/* Product Details */}
+                                <div className="p-3 sm:p-4 flex-grow flex flex-col">
+                                  <h3 className="text-sm sm:text-xl font-bold text-red-600 mb-2 line-clamp-2 transition-colors">
+                                    {product.name}
+                                  </h3>
+                                  <div className="space-y-2 text-xs sm:text-sm mb-3">
+                                    <div className="flex items-center font-semibold text-gray-700">
+                                      <span className="mr-1">Part No:</span>
+                                      <span className="font-medium text-gray-800 truncate ">{product.partNo}</span>
+                                    </div>
+                                    <div className="flex items-center font-semibold text-gray-700 ">
+                                      <span className="mr-1">Volt:</span>
+                                      <span className="font-medium text-gray-800 ">{product.volt}</span>
+                                    </div>
+                                    <div className="flex items-center font-semibold text-gray-700 ">
+                                      <span className="mr-1">Color:</span>
+                                      <div
+                                        className="w-8 h-4 rounded-full border border-gray-300 mr-1"
+                                        style={{ backgroundColor: product.color }}
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </motion.div>
+                          ))}
                         </div>
-                      </div>
-                      {/* Product Details */}
-                      <div className="p-3 sm:p-4 flex-grow flex flex-col">
-                        <h3 className="text-sm sm:text-xl font-bold text-red-600 mb-2 line-clamp-2 transition-colors">
-                          {product.name}
-                        </h3>
-                        <div className="space-y-2 text-xs sm:text-sm mb-3">
-                          <div className="flex items-center font-semibold text-gray-700">
-                            <span className="mr-1">Part No:</span>
-                            <span className="font-medium text-gray-800 truncate">{product.partNo}</span>
-                          </div>
-                          <div className="flex items-center font-semibold text-gray-700">
-                            <span className="mr-1">Volt:</span>
-                            <span className="font-medium text-gray-800">{product.volt}</span>
-                          </div>
-                          <div className="flex items-center font-semibold text-gray-700">
-                            <span className="mr-1">Color:</span>
-                            <div
-                              className="w-8 h-4 rounded-full border border-gray-300 mr-1"
-                              style={{ backgroundColor: product.color }}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            ))}
-          </motion.div>
+                      ))}
+                    </motion.div>
         )}
 
         {/* Carousel Pagination Dots */}
