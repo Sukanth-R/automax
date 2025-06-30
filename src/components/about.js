@@ -1,76 +1,12 @@
 import { motion, useAnimationControls } from "framer-motion";
-import { Award, Users, Clock, Home, Star, Milestone } from "lucide-react";
+import { Award, Users, Clock, Home} from "lucide-react";
 import { useEffect } from "react";
 
 const About = () => {
   // Sample gallery content (replace with your actual video and images)
 
   // Sample achievements content (replace with your actual achievements)
-  const achievements = [
-    {
-      id: 1,
-      icon: <Award className="w-8 h-8 text-red-600" />,
-      title: "Best LED Innovation 2020",
-      description: "Awarded for groundbreaking advancements in automotive LED technology.",
-    },
-    {
-      id: 2,
-      icon: <Star className="w-8 h-8 text-red-600" />,
-      title: "Dow Jones Sustainability Index",
-      description: "Ranked for outstanding sustainability practices in 2022.",
-    },
-    {
-      id: 3,
-      icon: <Users className="w-8 h-8 text-red-600" />,
-      title: "Top Employer 2023",
-      description: "Recognized for exceptional workplace culture and innovation.",
-    },
-    {
-      id: 4,
-      icon: <Award className="w-8 h-8 text-red-600" />,
-      title: "MSCI ESG 'A' Rating",
-      description: "Achieved 'A' rating for environmental and social responsibility in 2024.",
-    },
-  ];
-
-  // Sample journey content (replace with your actual timeline events)
-  const journey = [
-    {
-      id: 1,
-      year: "2010",
-      title: "Founded Automax Electronics",
-      description: "Established in Erode, Tamil Nadu, with a vision to revolutionize automotive lighting.",
-      icon: <Milestone className="w-6 h-6 text-red-600" />,
-    },
-    {
-      id: 2,
-      year: "2015",
-      title: "Launched ASTRA Brand",
-      description: "Introduced the ASTRA line of LED lights for two-wheelers and commercial vehicles.",
-      icon: <Star className="w-6 h-6 text-red-600" />,
-    },
-    {
-      id: 3,
-      year: "2018",
-      title: "Expanded to Coimbatore",
-      description: "Opened a second branch in Coimbatore to meet growing demand.",
-      icon: <Milestone className="w-6 h-6 text-red-600" />,
-    },
-    {
-      id: 4,
-      year: "2020",
-      title: "Best LED Innovation Award",
-      description: "Received industry recognition for innovative LED designs.",
-      icon: <Award className="w-6 h-6 text-red-600" />,
-    },
-    {
-      id: 5,
-      year: "2023",
-      title: "Sustainability Milestone",
-      description: "Ranked in Dow Jones Sustainability Index for eco-friendly practices.",
-      icon: <Star className="w-6 h-6 text-red-600" />,
-    },
-  ];
+  
 
   // Animation controls for marquee
   const controls = useAnimationControls();
@@ -129,7 +65,7 @@ const About = () => {
   </div>
 
   {/* Three Cards in Banner */}
-  <div className="relative z-10 inset-x-0 bottom-[60px] mt-[70px] flex justify-center space-x-4 px-4 pb-4">
+  <div className="relative z-10 inset-x-0 bottom-[60px] mt-[70px] flex justify-center space-x-2 px-4 pb-4">
     <motion.div
       whileHover={{ scale: 1.05 }}
       className="bg-red-600 text-white p-4 rounded-lg shadow-md w-1/3 min-w-[120px] flex flex-col items-center text-center"
@@ -220,72 +156,6 @@ const About = () => {
             </div>
           </div>
 
-
-          {/* Our Achievements and Journey Section */}
-          <h3 className="text-xl font-bold text-gray-800 mt-[60px] mb-4">Our Achievements and Journey</h3>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
-            className="flex flex-col gap-8"
-          >
-            {/* Achievements Subsection */}
-            <div>
-              <h4 className="text-lg font-semibold text-red-600 mb-4">Achievements</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {achievements.map((achievement, index) => (
-                  <motion.div
-                    key={achievement.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    whileHover={{ scale: 1.03 }}
-                    className="bg-white p-4 rounded-lg shadow-md border border-gray-100 hover:border-red-200 transition-colors"
-                  >
-                    <div className="flex items-center gap-3 mb-2">
-                      {achievement.icon}
-                      <h5 className="text-base font-semibold text-gray-800">{achievement.title}</h5>
-                    </div>
-                    <p className="text-sm text-gray-600">{achievement.description}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-
-            {/* Journey Subsection (Timeline) */}
-            <div>
-              <h4 className="text-lg font-semibold text-red-600 mb-4">Our Journey</h4>
-              <div className="relative">
-                {/* Central Timeline Line */}
-                <div className="absolute left-1/2 transform -translate-x-1/2 w-1 bg-red-600 h-full"></div>
-                {journey.map((event, index) => (
-                  <motion.div
-                    key={event.id}
-                    initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.2 }}
-                    className={`flex items-center mb-8 ${index % 2 === 0 ? "justify-start" : "justify-end"}`}
-                  >
-                    <div
-                      className={`w-full md:w-5/12 p-4 bg-gray-200 sm:mx-[100px] rounded-lg shadow-sm border border-gray-100 relative ${
-                        index % 2 === 0 ? "mr-auto" : "ml-auto"
-                      }`}
-                    >
-                      {/* Timeline Dot */}
-                      
-                      <div className="flex items-center gap-3 mb-2">
-                        {event.icon}
-                        <h5 className="text-base font-semibold text-gray-800">{event.year}: {event.title}</h5>
-                      </div>
-                      <p className="text-sm text-gray-600">{event.description}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
         </motion.div>
       </div>
     </div>

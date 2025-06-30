@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Filter, X, ChevronLeft, ChevronRight, Search, Home, ChevronDown, ChevronUp } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Filter, X, ChevronLeft, ChevronRight, Search, Home, ChevronDown, ChevronUp, RefreshCw } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Fog = () => {
   const navigate = useNavigate();
@@ -13,6 +13,8 @@ const Fog = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [currentCarousel, setCurrentCarousel] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
+  const [fetchError, setFetchError] = useState(false);
 
   const [expandedSections, setExpandedSections] = useState({
     voltage: true,
@@ -21,15 +23,19 @@ const Fog = () => {
 
   const filterDropdownRef = useRef(null);
 
-  // Responsive check
+  // Responsive checks
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    const handleResize = () => {
+      const width = window.innerWidth;
+      setIsMobile(width < 768);
+      setIsTablet(width >= 768 && width < 1024);
+    };
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Close dropdown when clicking outside
+  // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (filterDropdownRef.current && !filterDropdownRef.current.contains(event.target)) {
@@ -44,17 +50,17 @@ const Fog = () => {
     };
   }, [showFilters]);
 
-  // Fetch products
+  // Fetch products with caching
   useEffect(() => {
-    window.scrollTo(0, 0);
     const fetchProducts = async () => {
       try {
         setIsLoaded(false);
+        setFetchError(false);
 
-        // Check cache
+        // Cache keys specific for fog
         const cachedData = localStorage.getItem('fogLights');
         const cacheTimestamp = localStorage.getItem('fogLightsTimestamp');
-        const cacheExpiry = 60 * 60 * 1000; // 1 hour in milliseconds
+        const cacheExpiry = 60 * 60 * 1000; // 1 hour
 
         if (cachedData && cacheTimestamp) {
           const age = Date.now() - parseInt(cacheTimestamp, 10);
@@ -65,24 +71,28 @@ const Fog = () => {
           }
         }
 
-        // Fetch fresh data
         const response = await fetch("https://translator-0dye.onrender.com/api/products");
+        if (!response.ok) throw new Error("Failed to fetch");
         const data = await response.json();
-        const filtered = data.filter(p => p.category === "Fog Lights");
-        localStorage.setItem('fogLights', JSON.stringify(filtered));
+        // Change the category below to match your fog products
+        const filteredData = data.filter(p => p.category === "Fog Lights");
+
+        localStorage.setItem('fogLights', JSON.stringify(filteredData));
         localStorage.setItem('fogLightsTimestamp', Date.now().toString());
-        setProducts(filtered);
-        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        setProducts(filteredData);
+        await new Promise(resolve => setTimeout(resolve, 1500));
         setIsLoaded(true);
       } catch (error) {
-        console.error("Error fetching products:", error);
+        setFetchError(true);
         setIsLoaded(true);
       }
     };
+    window.scrollTo(0, 0);
     fetchProducts();
   }, []);
 
-  // Filter logic
+  // Filtering logic
   const uniqueColors = [...new Set(products.map(p => p.color))].filter(Boolean);
   const filteredProducts = products.filter(p =>
     (filterVolt === "all" || p.volt?.toLowerCase() === filterVolt.toLowerCase()) &&
@@ -92,7 +102,12 @@ const Fog = () => {
   );
 
   // Carousel logic
-  const productsPerRow = isMobile ? 2 : 6;
+  const getProductsPerRow = () => {
+    if (isMobile) return 2;
+    if (isTablet) return 4;
+    return 6;
+  };
+  const productsPerRow = getProductsPerRow();
   const rowsPerCarousel = 2;
   const productsPerCarousel = productsPerRow * rowsPerCarousel;
   const totalCarousels = Math.ceil(filteredProducts.length / productsPerCarousel);
@@ -100,25 +115,17 @@ const Fog = () => {
     currentCarousel * productsPerCarousel,
     (currentCarousel + 1) * productsPerCarousel
   );
-
-  // Split into rows
   const productRows = [];
   for (let i = 0; i < currentProducts.length; i += productsPerRow) {
     productRows.push(currentProducts.slice(i, i + productsPerRow));
   }
-
   const nextCarousel = () => setCurrentCarousel(prev => Math.min(prev + 1, totalCarousels - 1));
   const prevCarousel = () => setCurrentCarousel(prev => Math.max(prev - 1, 0));
-
-  // Filter section toggle
-  const toggleSection = (section) => {
-    setExpandedSections(prev => ({
-      ...prev,
-      [section]: !prev[section]
-    }));
-  };
-
-  // Clear all filters
+  const handleRefresh = () => window.location.reload();
+  const toggleSection = (section) => setExpandedSections(prev => ({
+    ...prev,
+    [section]: !prev[section]
+  }));
   const clearAllFilters = () => {
     setFilterVolt("all");
     setFilterColor("all");
@@ -130,21 +137,19 @@ const Fog = () => {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
   };
-
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
     hover: {
       y: -5,
-      boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)"
+      boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)",
+      backgroundColor: "#f8fafc"
     }
   };
-
   const dropdownVariants = {
     hidden: { opacity: 0, y: -10 },
     visible: { opacity: 1, y: 0 }
   };
-
   const loadingContainer = {
     hidden: { opacity: 0 },
     show: {
@@ -152,24 +157,19 @@ const Fog = () => {
       transition: { staggerChildren: 0.1 }
     }
   };
-
   const loadingItem = {
     hidden: { opacity: 0, y: 20 },
     show: {
       opacity: 1,
       y: 0,
-      transition: {
-        repeat: Infinity,
-        repeatType: "reverse",
-        duration: 0.8
-      }
+      transition: { repeat: Infinity, repeatType: "reverse", duration: 0.8 }
     }
   };
 
   const hasActiveFilters = filterVolt !== "all" || filterColor !== "all";
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-white flex flex-col">
       {/* Hero Section */}
       <section
         className="w-full sm:h-[400px] px-4 sm:px-6 lg:px-20 py-12 text-black relative"
@@ -193,9 +193,9 @@ const Fog = () => {
                   className="flex items-center gap-1 text-white hover:text-blue-300 transition-colors"
                 >
                   <Home className="h-5 w-5" />
-                  <span className="text-lg font-medium">Home</span>
+                  <span className="text-sm sm:text-lg font-medium">Home</span>
                 </button>
-                <span className="text-lg text-gray-300">/ FOG LIGHTS</span>
+                <span className="text-sm sm:text-lg text-gray-300">/ FOG LIGHTS</span>
               </div>
             </div>
             <div className="lg:w-2/3">
@@ -203,7 +203,7 @@ const Fog = () => {
                 FOG LIGHTS
               </h3>
               <p className="text-sm sm:text-base mb-6 text-gray-200">
-                Astra Fog Lights are designed for optimal visibility in challenging weather conditions. These high-performance lights penetrate through fog, rain, and mist, providing enhanced safety for your vehicle. Built with durable materials to withstand harsh environments.
+                Astra Fog Lights provide superior visibility in adverse weather conditions. Explore our range of reliable and efficient fog lighting solutions.
               </p>
             </div>
           </div>
@@ -225,7 +225,6 @@ const Fog = () => {
                 <span className="text-sm font-medium">Filters</span>
                 <ChevronDown className="h-4 w-4" />
               </button>
-
               <AnimatePresence>
                 {showFilters && (
                   <motion.div
@@ -414,7 +413,7 @@ const Fog = () => {
             className="space-y-4 sm:space-y-6"
           >
             {[...Array(rowsPerCarousel)].map((_, rowIndex) => (
-              <div key={rowIndex} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 sm:gap-4 md:gap-5">
+              <div key={rowIndex} className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-5">
                 {[...Array(productsPerRow)].map((_, colIndex) => (
                   <motion.div
                     key={`loading-${rowIndex}-${colIndex}`}
@@ -443,68 +442,68 @@ const Fog = () => {
           </motion.div>
         ) : (
           <motion.div
-                      variants={containerVariants}
-                      initial="hidden"
-                      animate={isLoaded ? "visible" : "hidden"}
-                      className="space-y-4 sm:space-y-6"
-                    >
-                      {productRows.map((row, rowIndex) => (
-                        <div key={rowIndex} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 sm:gap-4 md:gap-5 sm:mx-[50px]">
-                          {row.map((product) => (
-                            <motion.div
-                              key={product._id}
-                              variants={itemVariants}
-                              initial="hidden"
-                              animate="visible"
-                              whileHover="hover"
-                              className="bg-white transition-all overflow-hidden shadow-sm group rounded-lg"
-                            >
-                              <div className="flex flex-col h-full">
-                                {/* Product Image */}
-                                <div className="relative w-full aspect-square bg-white flex items-center justify-center group">
-                                  <div className="absolute inset-0 overflow-hidden">
-                                    {product.image ? (
-                                      <img
-                                        src={`data:image/jpeg;base64,${product.image}`}
-                                        alt={product.name}
-                                        className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
-                                      />
-                                    ) : (
-                                      <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
-                                        Image not available
-                                      </div>
-                                    )}
-                                  </div>
-                                </div>
-                                {/* Product Details */}
-                                <div className="p-3 sm:p-4 flex-grow flex flex-col">
-                                  <h3 className="text-sm sm:text-xl font-bold text-red-600 mb-2 line-clamp-2 transition-colors">
-                                    {product.name}
-                                  </h3>
-                                  <div className="space-y-2 text-xs sm:text-sm mb-3">
-                                    <div className="flex items-center font-semibold text-gray-700">
-                                      <span className="mr-1">Part No:</span>
-                                      <span className="font-medium text-gray-800 truncate ">{product.partNo}</span>
-                                    </div>
-                                    <div className="flex items-center font-semibold text-gray-700 ">
-                                      <span className="mr-1">Volt:</span>
-                                      <span className="font-medium text-gray-800 ">{product.volt}</span>
-                                    </div>
-                                    <div className="flex items-center font-semibold text-gray-700 ">
-                                      <span className="mr-1">Color:</span>
-                                      <div
-                                        className="w-8 h-4 rounded-full border border-gray-300 mr-1"
-                                        style={{ backgroundColor: product.color }}
-                                      />
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </motion.div>
-                          ))}
+            variants={containerVariants}
+            initial="hidden"
+            animate={isLoaded ? "visible" : "hidden"}
+            className="space-y-4 sm:space-y-6"
+          >
+            {productRows.map((row, rowIndex) => (
+              <div key={rowIndex} className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-5">
+                {row.map((product) => (
+                  <motion.div
+                    key={product._id}
+                    variants={itemVariants}
+                    initial="hidden"
+                    animate="visible"
+                    whileHover="hover"
+                    className="bg-white transition-all overflow-hidden shadow-sm group rounded-lg"
+                  >
+                    <div className="flex flex-col h-full">
+                      {/* Product Image */}
+                      <div className="relative w-full aspect-square bg-white flex items-center justify-center group">
+                        <div className="absolute inset-0 overflow-hidden">
+                          {product.image ? (
+                            <img
+                              src={`data:image/jpeg;base64,${product.image}`}
+                              alt={product.name}
+                              className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+                              Image not available
+                            </div>
+                          )}
                         </div>
-                      ))}
-                    </motion.div>
+                      </div>
+                      {/* Product Details */}
+                      <div className="p-3 sm:p-4 flex-grow flex flex-col">
+                        <h3 className="text-sm sm:text-base font-bold text-red-600 mb-2 line-clamp-2 transition-colors">
+                          {product.name}
+                        </h3>
+                        <div className="space-y-2 text-xs sm:text-sm mb-3">
+                          <div className="flex items-center font-semibold text-gray-700">
+                            <span className="mr-1">Part No:</span>
+                            <span className="font-medium text-gray-800 truncate">{product.partNo}</span>
+                          </div>
+                          <div className="flex items-center font-semibold text-gray-700">
+                            <span className="mr-1">Volt:</span>
+                            <span className="font-medium text-gray-800">{product.volt}</span>
+                          </div>
+                          <div className="flex items-center font-semibold text-gray-700">
+                            <span className="mr-1">Color:</span>
+                            <div
+                              className="w-8 h-4 rounded-full border border-gray-300 mr-1"
+                              style={{ backgroundColor: product.color }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            ))}
+          </motion.div>
         )}
 
         {/* Carousel Pagination Dots */}
@@ -520,6 +519,19 @@ const Fog = () => {
                 aria-label={`Go to page ${index + 1}`}
               />
             ))}
+          </div>
+        )}
+        {/* Error State */}
+        {fetchError && (
+          <div className="flex flex-col items-center justify-center py-12 bg-gray-50 rounded-lg mt-6">
+            <div className="text-lg font-medium text-gray-700 mb-4">Failed to display products</div>
+            <button
+              onClick={handleRefresh}
+              className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors"
+            >
+              <RefreshCw className="h-4 w-4" />
+              <span>Try Again</span>
+            </button>
           </div>
         )}
       </div>

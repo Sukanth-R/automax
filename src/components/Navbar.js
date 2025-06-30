@@ -92,44 +92,44 @@ const Navbar = () => {
   return (
     <>
       {/* First Navbar (Logo, Search, Contact, Social Media) */}
-      <nav className="bg-white text-black p-4 md:sticky md:top-0 md:z-50 border-b border-gray-200">
-        <div className="container mx-auto md:px-10 flex justify-between items-center">
+      <nav className="bg-white text-black p-3 sm:p-4 md:sticky md:top-0 md:z-50 border-b border-gray-200">
+        <div className="container mx-auto px-4 sm:px-6 md:px-10 flex justify-between items-center">
           {/* Logo - Left aligned */}
           <div className="cursor-pointer" onClick={handleLogoClick}>
             <img 
               src="https://sukanth-r.github.io/automax/images/logo1.png"
               alt="AUTOMAX Logo"
-              className="h-10 w-auto object-contain"
+              className="h-8 sm:h-10 w-auto object-contain"
             />
           </div>
 
           {/* Updated Search Bar (Desktop) */}
-          <div className="hidden md:flex flex-1 mx-8 max-w-2xl search-container relative">
+          <div className="hidden md:flex flex-1 mx-4 sm:mx-6 md:mx-8 max-w-sm sm:max-w-md md:max-w-lg search-container relative">
             <div className="relative w-full">
               <input
                 type="text"
                 value={searchQuery}
                 onChange={handleSearchChange}
                 placeholder="Search Products"
-                className="w-full p-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500 text-base"
+                className="w-full p-2 sm:p-2.5 pl-8 sm:pl-10 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500 text-sm sm:text-base"
               />
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={20} />
+              <Search className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4 sm:w-5 sm:h-5" size={20} />
               
               {/* Search Results Dropdown */}
               {showSearchResults && searchQuery && (
-                <div className="absolute top-full left-0 right-0 bg-white mt-1 rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto z-50">
+                <div className="absolute top-full left-0 right-0 bg-white mt-1 rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto z-50 w-full">
                   {filteredProducts.length > 0 ? (
                     filteredProducts.map((product) => (
                       <div
                         key={product.path}
                         onClick={() => handleSearchResultClick(product.path)}
-                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-800 hover:text-red-600"
+                        className="px-3 sm:px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-800 hover:text-red-600 text-sm sm:text-base"
                       >
                         {product.label}
                       </div>
                     ))
                   ) : (
-                    <div className="px-4 py-2 text-gray-500">No products found</div>
+                    <div className="px-3 sm:px-4 py-2 text-gray-500 text-sm sm:text-base">No products found</div>
                   )}
                 </div>
               )}
@@ -137,31 +137,31 @@ const Navbar = () => {
           </div>
 
           {/* Contact & Social Media (Desktop) */}
-          <div className="hidden md:flex items-center space-x-6 text-sm">
-            <div className="flex items-center space-x-6">
+          <div className="hidden md:flex items-center space-x-4 sm:space-x-6 text-xs sm:text-sm">
+            <div className="flex items-center space-x-4 sm:space-x-6">
               <a
                 href="tel:+918825967397"
                 className="flex items-center hover:text-red-700 transition duration-300"
               >
-                <FaPhone style={{ transform: "rotate(90deg)" }} className="text-red-500 mr-2" size={16} />
+                <FaPhone style={{ transform: "rotate(90deg)" }} className="text-red-500 mr-1 sm:mr-2" size={14} />
               </a>
               <a
                 href="mailto:vivekautomax@gmail.com"
                 className="flex items-center hover:text-red-700 transition duration-300"
               >
-                <FaEnvelope className="text-red-500 mr-2" size={16} />
+                <FaEnvelope className="text-red-500 mr-1 sm:mr-2" size={14} />
               </a>
             </div>
-            <div className="flex items-center space-x-4 ml-2">
-              <span className="text-gray-600">Follow Us:</span>
-              <div className="flex space-x-3">
+            <div className="flex items-center space-x-2 sm:space-x-4 ml-2">
+              <span className="text-gray-600 hidden sm:inline">Follow Us:</span>
+              <div className="flex space-x-2 sm:space-x-3">
                 <a
                   href="https://facebook.com"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-red-500 hover:text-red-700 transition duration-300"
                 >
-                  <FaFacebook size={18} />
+                  <FaFacebook size={16} />
                 </a>
                 <a
                   href="https://instagram.com"
@@ -169,7 +169,7 @@ const Navbar = () => {
                   rel="noopener noreferrer"
                   className="text-red-500 hover:text-red-700 transition duration-300"
                 >
-                  <FaInstagram size={18} />
+                  <FaInstagram size={16} />
                 </a>
                 <a
                   href="https://twitter.com"
@@ -177,7 +177,7 @@ const Navbar = () => {
                   rel="noopener noreferrer"
                   className="text-red-500 hover:text-red-700 transition duration-300"
                 >
-                  <FaTwitter size={18} />
+                  <FaTwitter size={16} />
                 </a>
                 <a
                   href="https://linkedin.com"
@@ -185,27 +185,27 @@ const Navbar = () => {
                   rel="noopener noreferrer"
                   className="text-red-500 hover:text-red-700 transition duration-300"
                 >
-                  <FaLinkedin size={18} />
+                  <FaLinkedin size={16} />
                 </a>
               </div>
             </div>
           </div>
 
           {/* Mobile Icons (Search, Menu) - Right aligned */}
-          <div className="md:hidden flex items-center space-x-4 ml-auto">
+          <div className="md:hidden flex items-center space-x-3 sm:space-x-4 ml-auto">
             <button
-              className="p-2 rounded-lg hover:bg-gray-200 transition duration-300"
+              className="p-1 sm:p-2 rounded-lg hover:bg-gray-200 transition duration-300"
               onClick={toggleSearch}
               aria-label="Search"
             >
-              <Search size={24} />
+              <Search size={20} />
             </button>
             <button
-              className="p-2 rounded-lg hover:bg-gray-200 transition duration-300"
+              className="p-1 sm:p-2 rounded-lg hover:bg-gray-200 transition duration-300"
               onClick={() => setIsOpen(!isOpen)}
               aria-label="Menu"
             >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
+              {isOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </div>
@@ -218,7 +218,7 @@ const Navbar = () => {
         }`}
         aria-hidden={!searchOpen}
       >
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 sm:px-6">
           <div className="relative w-full search-container">
             <input
               type="text"
@@ -226,25 +226,25 @@ const Navbar = () => {
               onChange={handleSearchChange}
               onFocus={() => setShowSearchResults(true)}
               placeholder="Search Products"
-              className="w-full p-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500 text-sm md:text-base"
+              className="w-full p-2 pl-8 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500 text-sm"
             />
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5" size={20} />
+            <Search className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4" size={20} />
             
             {/* Mobile Search Results Dropdown */}
             {showSearchResults && searchQuery && (
-              <div className="absolute top-full left-0 right-0 bg-white mt-1 rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto z-50 w-[calc(100vw-2rem)] mx-auto">
+              <div className="absolute top-full left-0 right-0 bg-white mt-1 rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto z-50 w-full mx-auto">
                 {filteredProducts.length > 0 ? (
                   filteredProducts.map((product) => (
                     <div
                       key={product.path}
                       onClick={() => handleSearchResultClick(product.path)}
-                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-800 hover:text-red-600 text-sm"
+                      className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-gray-800 hover:text-red-600 text-sm"
                     >
                       {product.label}
                     </div>
                   ))
                 ) : (
-                  <div className="px-4 py-2 text-gray-500 text-sm">No products found</div>
+                  <div className="px-3 py-2 text-gray-500 text-sm">No products found</div>
                 )}
               </div>
             )}
@@ -253,9 +253,9 @@ const Navbar = () => {
       </div>
 
       {/* Second Navbar (Navigation Links) - Hidden on Mobile */}
-      <nav className="hidden md:block bg-white text-black py-3 sticky top-[72px] z-40 border-b border-gray-200 shadow-sm">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="flex items-center space-x-8">
+      <nav className="hidden md:block bg-white text-black py-3 sticky top-[64px] sm:top-[72px] z-40 border-b border-gray-200 shadow-sm">
+        <div className="container mx-auto px-4 sm:px-6 md:px-10">
+          <div className="flex items-center space-x-6 sm:space-x-8">
             <Link
               to="/"
               className={`hover:text-red-600 transition duration-300 ${
@@ -320,16 +320,16 @@ const Navbar = () => {
 
       {/* Mobile Sidebar Menu */}
       <div
-        className={`md:hidden fixed inset-y-0 left-0 z-50 bg-white w-72 transition-transform duration-300 ease-in-out ${
+        className={`md:hidden fixed inset-y-0 left-0 z-50 bg-white w-64 sm:w-72 transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
-        style={{ top: "72px", height: "calc(100vh - 72px)" }}
+        style={{ top: "64px", height: "calc(100vh - 64px)" }}
         aria-hidden={!isOpen}
       >
         <div className="h-full overflow-y-auto px-4 pb-4 space-y-2 pt-4">
           <Link
             to="/"
-            className={`block py-3 px-4 text-base hover:bg-gray-100 transition duration-300 rounded-md ${
+            className={`block py-3 px-4 text-sm sm:text-base hover:bg-gray-100 transition duration-300 rounded-md ${
               isActive("/") ? "bg-gray-100 text-red-600 font-medium" : ""
             }`}
             onClick={closeMobileMenu}
@@ -338,7 +338,7 @@ const Navbar = () => {
           </Link>
           <Link
             to="/about"
-            className={`block py-3 px-4 text-base hover:bg-gray-100 transition duration-300 rounded-md ${
+            className={`block py-3 px-4 text-sm sm:text-base hover:bg-gray-100 transition duration-300 rounded-md ${
               isActive("/about") ? "bg-gray-100 text-red-600 font-medium" : ""
             }`}
             onClick={closeMobileMenu}
@@ -350,7 +350,7 @@ const Navbar = () => {
           <div className="relative">
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className={`flex items-center w-full text-black text-left py-3 px-4 text-base hover:bg-gray-100 transition duration300 rounded-md ${
+              className={`flex items-center w-full text-black text-left py-3 px-4 text-sm sm:text-base hover:bg-gray-100 transition duration-300 rounded-md ${
                 location.pathname.startsWith("/products") ? "bg-gray-100 text-red-600 font-medium" : ""
               }`}
               aria-expanded={dropdownOpen}
@@ -371,7 +371,7 @@ const Navbar = () => {
                   <Link
                     key={item.path}
                     to={item.path}
-                    className={`block px-4 py-2 hover:bg-gray-100 hover:text-red-600 transition duration-300 ${
+                    className={`block px-4 py-2 hover:bg-gray-100 hover:text-red-600 transition duration-300 text-sm sm:text-base ${
                       isActive(item.path) ? "bg-gray-100 text-red-600" : ""
                     }`}
                     onClick={closeMobileMenu}
@@ -386,7 +386,7 @@ const Navbar = () => {
 
           <Link
             to="/contact"
-            className={`block py-3 px-4 text-base hover:bg-gray-100 transition duration-300 rounded-md ${
+            className={`block py-3 px-4 text-sm sm:text-base hover:bg-gray-100 transition duration-300 rounded-md ${
               isActive("/contact") ? "bg-gray-100 text-red-600 font-medium" : ""
             }`}
             onClick={closeMobileMenu}
@@ -399,26 +399,26 @@ const Navbar = () => {
             <div className="space-y-3">
               <a
                 href="tel:+918825967397"
-                className="flex items-center px-4 py-3 bg-gray-100 rounded-lg text-base"
+                className="flex items-center px-4 py-3 bg-gray-100 rounded-lg text-sm sm:text-base"
                 onClick={closeMobileMenu}
               >
-                <FaPhone style={{ transform: "rotate(90deg)" }} className="text-red-500 mr-3" size={18} />
+                <FaPhone style={{ transform: "rotate(90deg)" }} className="text-red-500 mr-3" size={16} />
                 Call Us: +91 88259 67397
               </a>
               <a
                 href="mailto:vivekautomax@gmail.com"
-                className="flex items-center px-4 py-3 bg-gray-100 rounded-lg text-base"
+                className="flex items-center px-4 py-3 bg-gray-100 rounded-lg text-sm sm:text-base"
                 onClick={closeMobileMenu}
               >
-                <FaEnvelope className="text-red-500 mr-3" size={18} />
+                <FaEnvelope className="text-red-500 mr-3" size={16} />
                 Email: vivekautomax@gmail.com
               </a>
             </div>
 
             {/* Social Media Section (Mobile) */}
             <div className="flex items-center mt-4 px-4 py-2">
-              <p className="text-base mr-3">Follow Us:</p>
-              <div className="flex space-x-4">
+              <p className="text-sm sm:text-base mr-3">Follow Us:</p>
+              <div className="flex space-x-3 sm:space-x-4">
                 <a
                   href="https://facebook.com"
                   target="_blank"
@@ -426,7 +426,7 @@ const Navbar = () => {
                   className="text-red-500 hover:text-red-700 transition duration-300"
                   aria-label="Facebook"
                 >
-                  <FaFacebook size={20} />
+                  <FaFacebook size={18} />
                 </a>
                 <a
                   href="https://instagram.com"
@@ -435,7 +435,7 @@ const Navbar = () => {
                   className="text-red-500 hover:text-red-700 transition duration-300"
                   aria-label="Instagram"
                 >
-                  <FaInstagram size={20} />
+                  <FaInstagram size={18} />
                 </a>
                 <a
                   href="https://twitter.com"
@@ -444,7 +444,7 @@ const Navbar = () => {
                   className="text-red-500 hover:text-red-700 transition duration-300"
                   aria-label="Twitter"
                 >
-                  <FaTwitter size={20} />
+                  <FaTwitter size={18} />
                 </a>
                 <a
                   href="https://linkedin.com"
@@ -453,7 +453,7 @@ const Navbar = () => {
                   className="text-red-500 hover:text-red-700 transition duration-300"
                   aria-label="LinkedIn"
                 >
-                  <FaLinkedin size={20} />
+                  <FaLinkedin size={18} />
                 </a>
               </div>
             </div>
