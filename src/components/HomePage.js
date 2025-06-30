@@ -215,6 +215,9 @@ function HomePage() {
       prevFeature();
     }
   };
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-white text-gray-900">
