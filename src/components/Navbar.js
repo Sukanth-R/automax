@@ -15,7 +15,6 @@ const Navbar = () => {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
-      setSearchOpen(false); // Close search bar when sidebar opens
     } else {
       document.body.style.overflow = "auto";
     }
@@ -50,9 +49,6 @@ const Navbar = () => {
     if (!searchOpen) {
       setShowSearchResults(false);
       setSearchQuery("");
-    }
-    if (!searchOpen) {
-      setIsOpen(false); // Close sidebar when search bar opens
     }
   };
 
@@ -206,10 +202,7 @@ const Navbar = () => {
             </button>
             <button
               className="p-1 sm:p-2 rounded-lg hover:bg-gray-200 transition duration-300"
-              onClick={() => {
-                setIsOpen(!isOpen);
-                if (!isOpen) setSearchOpen(false); // Close search bar when sidebar opens
-              }}
+              onClick={() => setIsOpen(!isOpen)}
               aria-label="Menu"
             >
               {isOpen ? <X size={20} /> : <Menu size={20} />}
@@ -220,9 +213,10 @@ const Navbar = () => {
 
       {/* Mobile Search Bar (Toggles when search icon clicked) */}
       <div
-        className={`md:hidden bg-white z-[60] relative transition-all duration-300 ease-in-out ${
+        className={`md:hidden bg-white transition-all duration-300 ease-in-out ${
           searchOpen ? "max-h-24 py-3" : "max-h-0 overflow-hidden"
         }`}
+        style={{ zIndex: isOpen ? 60 : 40 }}
         aria-hidden={!searchOpen}
       >
         <div className="container mx-auto px-4 sm:px-6">
@@ -239,7 +233,7 @@ const Navbar = () => {
             
             {/* Mobile Search Results Dropdown */}
             {showSearchResults && searchQuery && (
-              <div className="absolute top-full left-0 right-0 bg-white mt-1 rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto z-40 w-full mx-auto">
+              <div className="absolute top-full left-0 right-0 bg-white mt-1 rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto z-50 w-full mx-auto">
                 {filteredProducts.length > 0 ? (
                   filteredProducts.map((product) => (
                     <div
@@ -336,7 +330,7 @@ const Navbar = () => {
         <div className="h-full overflow-y-auto px-4 pb-4 space-y-2 pt-4">
           <Link
             to="/"
-            className={`block py-3 px-4 text-sm sm:text-base hover:bg-gray-100 transition duration-300 rounded-md ${
+            className={`block py-3 px-4 text-sm sm:text-base  hover:bg-gray-100 transition duration-300 rounded-md ${
               isActive("/") ? "bg-gray-100 text-red-600 font-medium" : ""
             }`}
             onClick={closeMobileMenu}
