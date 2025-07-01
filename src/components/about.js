@@ -1,6 +1,7 @@
 import { motion, useAnimationControls } from "framer-motion";
 import { Award, Users, Clock, Home} from "lucide-react";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const About = () => {
   // Sample gallery content (replace with your actual video and images)
@@ -27,74 +28,82 @@ const About = () => {
   }, []);
 
   // Handle hover pause/resume
+  const navigate = useNavigate();
 
   return (
     <div className="flex min-h-screen bg-gray-100 flex-col">
       {/* Banner with Header and Cards */}
-<motion.div
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.8, ease: "easeOut" }}
-  className="relative w-full h-96 md:h-120 overflow-hidden"
-  style={{
-    backgroundImage: `url('https://static.vecteezy.com/system/resources/thumbnails/038/989/885/small_2x/ai-generated-colorful-lights-shining-brightly-in-the-dark-photo.jpeg')`, // Replace with your image URL
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-  }}
->
-  {/* Overlay for better text readability */}
-  <div className="absolute inset-0 bg-black bg-opacity-40" />
-  
-  {/* Header Section */}
-  <div className="relative z-10 top-0 left-0 w-full px-4 md:px-6 lg:px-20 py-6">
-    <div className="flex flex-col">
-      {/* Automax Info and Breadcrumb */}
-      <div className="mb-4">
-        <h2 className="text-3xl md:text-4xl font-bold text-white">AUTOMAX</h2>
-        <p className="text-sm uppercase text-gray-200 mb-2">MANUFACTURING | MARKETING</p>
-        <div className="w-16 h-1 bg-orange-400 mb-2"></div>
-        {/* Breadcrumb Navigation */}
-        <div className="flex items-center gap-2">
-          <Home className="h-5 w-5 text-gray-200" />
-          <span className="text-lg text-gray-200">Home</span>
-          <span className="text-lg text-gray-300">/ ABOUT US</span>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="relative w-full h-96 md:h-120 overflow-hidden"
+        style={{
+          backgroundImage: `url('https://static.vecteezy.com/system/resources/thumbnails/038/989/885/small_2x/ai-generated-colorful-lights-shining-brightly-in-the-dark-photo.jpeg')`, // Replace with your image URL
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
+        {/* Overlay for better text readability */}
+        <div className="absolute inset-0 bg-black bg-opacity-40" />
+        
+        {/* Header Section */}
+        <div className="relative z-10 top-0 left-0 w-full px-4 md:px-6 lg:px-20 py-6">
+          <div className="flex flex-col">
+            {/* Automax Info and Breadcrumb */}
+            <div className="mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-red-600">AUTOMAX</h2>
+              <p className="text-sm uppercase text-gray-200 mb-2">MANUFACTURING | MARKETING</p>
+              <div className="w-16 h-1 bg-orange-400 mb-2"></div>
+              {/* Breadcrumb Navigation */}
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  className="flex items-center gap-1 focus:outline-none"
+                  onClick={() => navigate("/")}
+                  style={{ background: "none", border: "none", padding: 0, margin: 0, cursor: "pointer" }}
+                >
+                  <Home className="h-5 w-5 text-gray-200" />
+                  <span className="text-lg text-gray-200">Home</span>
+                </button>
+                <span className="text-lg text-gray-300">/ ABOUT US</span>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </div>
 
-  {/* Three Cards in Banner */}
-  <div className="relative z-10 inset-x-0 bottom-[60px] mt-[70px] flex justify-center space-x-2 px-4 pb-4">
-    <motion.div
-      whileHover={{ scale: 1.05 }}
-      className="bg-red-600 text-white p-4 rounded-lg shadow-md w-1/3 min-w-[120px] flex flex-col items-center text-center"
-    >
-      <Clock className="w-8 h-8 mb-2" />
-      <h4 className="text-sm font-bold">25 Years Experience</h4>
-      <p className="text-xs">Excellence in quality and performance.</p>
-    </motion.div>
-    <motion.div
-      whileHover={{ scale: 1.05 }}
-      className="bg-red-600 text-white p-4 rounded-lg shadow-md w-1/3 min-w-[120px] flex flex-col items-center text-center"
-    >
-      <Award className="w-8 h-8 mb-2" />
-      <h4 className="text-sm font-bold">Award Winning</h4>
-      <p className="text-xs">Setting industry standards.</p>
-    </motion.div>
-    <motion.div
-      whileHover={{ scale: 1.05 }}
-      className="bg-red-600 text-white p-4 rounded-lg shadow-md w-1/3 min-w-[120px] flex flex-col items-center text-center"
-    >
-      <Users className="w-8 h-8 mb-2" />
-      <h4 className="text-sm font-bold">Dedicated Team</h4>
-      <p className="text-xs">Innovative solutions with quality.</p>
-    </motion.div>
-  </div>
-</motion.div>
+        {/* Three Cards in Banner */}
+        <div className="relative z-10 inset-x-0 bottom-[60px] mt-[70px] flex justify-center space-x-2 px-4 pb-4">
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            className="bg-red-600 text-white p-4 rounded-lg shadow-md w-1/3 min-w-[120px] flex flex-col items-center text-center"
+          >
+            <Clock className="w-8 h-8 mb-2" />
+            <h4 className="text-sm font-bold">25 Years Experience</h4>
+            <p className="text-xs">Excellence in quality and performance.</p>
+          </motion.div>
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            className="bg-red-600 text-white p-4 rounded-lg shadow-md w-1/3 min-w-[120px] flex flex-col items-center text-center"
+          >
+            <Award className="w-8 h-8 mb-2" />
+            <h4 className="text-sm font-bold">Award Winning</h4>
+            <p className="text-xs">Setting industry standards.</p>
+          </motion.div>
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            className="bg-red-600 text-white p-4 rounded-lg shadow-md w-1/3 min-w-[120px] flex flex-col items-center text-center"
+          >
+            <Users className="w-8 h-8 mb-2" />
+            <h4 className="text-sm font-bold">Dedicated Team</h4>
+            <p className="text-xs">Innovative solutions with quality.</p>
+          </motion.div>
+        </div>
+      </motion.div>
 
       {/* About Section (Overlapping Banner) */}
-      <div className="container mx-auto px-4 py-4 relative">
+      <div className="container mx-auto py-4 relative">
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: -20, opacity: 1 }}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Home } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { FaWhatsapp, FaEnvelope, FaPhone } from 'react-icons/fa';
 
 const Contact = () => {
   const navigate = useNavigate();  
@@ -18,6 +19,7 @@ const Contact = () => {
   const [submitStatus, setSubmitStatus] = useState({
     success: false,
     message: "",
+    showPopup: false,
   });
 
   const handleInputChange = (e) => {
@@ -31,7 +33,7 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setSubmitStatus({ success: false, message: "" });
+    setSubmitStatus({ success: false, message: "", showPopup: true });
 
     try {
       const response = await fetch('https://translator-0dye.onrender.com/api/contact', {
@@ -48,6 +50,7 @@ const Contact = () => {
         setSubmitStatus({
           success: true,
           message: 'Message sent successfully! We will contact you soon.',
+          showPopup: true,
         });
         setFormData({
           name: "",
@@ -64,11 +67,21 @@ const Contact = () => {
       console.error('Error submitting form:', error);
       setSubmitStatus({
         success: false,
-        message: error.message || 'Error sending message. Please try again.',
+        message: error.message || 'Failed to send message. Please try again.',
+        showPopup: true,
       });
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleTryAgain = () => {
+    setSubmitStatus({ success: false, message: "", showPopup: false });
+    handleSubmit(new Event('submit')); // Trigger form submission again
+  };
+
+  const handleClosePopup = () => {
+    setSubmitStatus({ ...submitStatus, showPopup: false });
   };
 
   useEffect(() => {
@@ -119,15 +132,12 @@ const Contact = () => {
       {/* Contact Cards Section */}
       <section className="w-full px-4 sm:px-6 lg:px-20 py-12">
         <div className="container mx-auto">
-        <h1 className="text-center text-3xl text-red-600 font-bold pb-6">CONTACT US</h1>
+          <h1 className="text-center text-3xl text-red-600 font-bold pb-6">CONTACT US</h1>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* WhatsApp Card */}
             <div className="rounded-lg p-6 text-center shadow-md bg-gray-100">
-              <svg className="mx-auto h-12 w-12 text-red-600 mb-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-                <path d="M15.5 14.5c-.3 0-.6-.1-.8-.2l-2.1-1c-.2-.1-.4-.1-.6 0l-1.2.6c-.4.2-.8.1-1.1-.2-.3-.3-.5-.7-.4-1.1l.5-1.5c.1-.2 0-.4-.1-.6l-1-1.5c-.2-.3-.2-.6-.1-.9.1-.3.4-.5.7-.5h1.5c.2 0 .4.1.5.2l2.5 3c.1.2.2.3.4.3s.3-.1.4-.2l1.5-2c.2-.2.4-.3.6-.2.2.1.3.3.2.6l-.5 1.5c-.1.2 0 .4.1.6l1 1.5c.2.3.2.6.1.9-.1.3-.4.5-.7.5h-1.5z"/>
-              </svg>
+              <FaWhatsapp className="mx-auto h-12 w-12 text-gray-800 mb-4" />
               <h4 className="text-lg font-semibold mb-2">WhatsApp Support</h4>
               <p className="text-gray-600 mb-4">9711773333</p>
               <a
@@ -141,10 +151,7 @@ const Contact = () => {
             </div>
             {/* Email Card */}
             <div className="bg-gray-100 rounded-lg p-6 text-center shadow-md">
-              <svg className="mx-auto h-12 w-12 text-red-600 mb-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                <polyline points="22,6 12,13 2,6"/>
-              </svg>
+              <FaEnvelope className="mx-auto h-12 w-12 text-gray-800 mb-4" />
               <h4 className="text-lg font-semibold mb-2">Email Support</h4>
               <p className="text-gray-600 mb-4">customercare@havells.com</p>
               <a
@@ -156,9 +163,10 @@ const Contact = () => {
             </div>
             {/* Phone Card */}
             <div className="bg-gray-100 rounded-lg p-6 text-center shadow-md">
-              <svg className="mx-auto h-12 w-12 text-red-600 mb-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-              </svg>
+              <div className="relative inline-block">
+                <FaPhone className="mx-auto h-12 w-12 text-gray-300 mb-4" style={{ filter: 'invert(1)' , transform: "rotate(90deg)" }} /> {/* Inverted Phone icon */}
+                <div className="absolute inset-0 opacity-50 rounded-full -z-10"></div>
+              </div>
               <h4 className="text-lg font-semibold mb-2">Customer Care No.</h4>
               <p className="text-gray-600 mb-4">08045771313</p>
               <a
@@ -187,13 +195,6 @@ const Contact = () => {
             <h2 className="text-2xl md:text-4xl font-bold text-black mb-8 text-left tracking-wide pb-5">
               If you have any queries,<br />Please feel free to contact us
             </h2>
-
-            {/* Submission Status Message */}
-            {submitStatus.message && (
-              <div className={`mb-6 p-4 rounded-lg ${submitStatus.success ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                {submitStatus.message}
-              </div>
-            )}
 
             {/* Name and Email Row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -301,7 +302,7 @@ const Contact = () => {
             <motion.button
               type="submit"
               disabled={isSubmitting}
-              className={`w-full bg-gradient-to-r mb-5 ${isSubmitting ? 'from-gray-600 to-gray-800' : 'from-red-600 to-red-800'} text-white  bg-red-600 py-3 px-6 rounded-lg hover:from-red-600 hover:to-red-400 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-semibold`}
+              className={`w-full bg-gradient-to-r mb-5 ${isSubmitting ? 'from-gray-600 to-gray-800' : 'from-red-600 to-red-800'} text-white py-3 px-6 rounded-lg hover:from-red-600 hover:to-red-400 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-semibold`}
               whileHover={{ scale: isSubmitting ? 1 : 1.05 }}
               whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
             >
@@ -354,6 +355,55 @@ const Contact = () => {
           </motion.div>
         </div>
       </div>
+
+      {/* Popup for Submission Status */}
+      {submitStatus.showPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <motion.div
+            className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md"
+            initial={{ scale: 0.7, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.7, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="text-center">
+              {isSubmitting ? (
+                <div className="bg-white text-white p-4 rounded-lg">
+                  <svg className="animate-spin mx-auto mb-4 h-10 w-10 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <h3 className="text-xl font-semibold text-red-600">Sending Message...</h3>
+                </div>
+              ) : submitStatus.success ? (
+                <div className="bg-green-100 text-green-800 p-4 rounded-lg">
+                  <h3 className="text-xl font-semibold">Success!</h3>
+                  <p className="mt-2">{submitStatus.message}</p>
+                </div>
+              ) : (
+                <div className="bg-red-100 text-red-800 p-4 rounded-lg">
+                  <h3 className="text-xl font-semibold">Error</h3>
+                  <p className="mt-2">Failed to send message</p>
+                  <button
+                    onClick={handleTryAgain}
+                    className="mt-4 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-500 transition-all duration-300"
+                  >
+                    Try Again
+                  </button>
+                </div>
+              )}
+              {!isSubmitting && (
+                <button
+                  onClick={handleClosePopup}
+                  className="mt-4 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-gray-400 transition-all duration-300"
+                >
+                  Close
+                </button>
+              )}
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 };

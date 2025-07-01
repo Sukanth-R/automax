@@ -15,6 +15,7 @@ const Navbar = () => {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
+      setSearchOpen(false); // Close search bar when sidebar opens
     } else {
       document.body.style.overflow = "auto";
     }
@@ -49,6 +50,9 @@ const Navbar = () => {
     if (!searchOpen) {
       setShowSearchResults(false);
       setSearchQuery("");
+    }
+    if (!searchOpen) {
+      setIsOpen(false); // Close sidebar when search bar opens
     }
   };
 
@@ -202,7 +206,10 @@ const Navbar = () => {
             </button>
             <button
               className="p-1 sm:p-2 rounded-lg hover:bg-gray-200 transition duration-300"
-              onClick={() => setIsOpen(!isOpen)}
+              onClick={() => {
+                setIsOpen(!isOpen);
+                if (!isOpen) setSearchOpen(false); // Close search bar when sidebar opens
+              }}
               aria-label="Menu"
             >
               {isOpen ? <X size={20} /> : <Menu size={20} />}
@@ -232,7 +239,7 @@ const Navbar = () => {
             
             {/* Mobile Search Results Dropdown */}
             {showSearchResults && searchQuery && (
-              <div className="absolute top-full left-0 right-0 bg-white mt-1 rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto z-50 w-full mx-auto">
+              <div className="absolute top-full left-0 right-0 bg-white mt-1 rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto z-40 w-full mx-auto">
                 {filteredProducts.length > 0 ? (
                   filteredProducts.map((product) => (
                     <div
@@ -323,7 +330,7 @@ const Navbar = () => {
         className={`md:hidden fixed inset-y-0 left-0 z-50 bg-white w-64 sm:w-72 transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
-        style={{ top: "64px", height: "calc(100vh - 64px)" }}
+        style={{ top: "0px", height: "calc(100vh - 0px)" }}
         aria-hidden={!isOpen}
       >
         <div className="h-full overflow-y-auto px-4 pb-4 space-y-2 pt-4">
