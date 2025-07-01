@@ -100,7 +100,7 @@ const Contact = () => {
         style={{
           backgroundImage: `url('https://www.jycircuit.net/wp-content/uploads/2022/12/contact.jpg')`,
           backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundPosition: 'top',
           backgroundRepeat: 'no-repeat',
         }}
       >
@@ -123,7 +123,7 @@ const Contact = () => {
               </div>
             </div>
             <div className="lg:w-2/3">
-              <h3 className="text-xl sm:text-4xl font-semibold mb-6 text-white">FEEL FREE TO CONTACT US<br></br>AND WE ARE AVAILABLE<br></br> AT ANYTIME</h3>
+              <h3 className="text-xl sm:text-4xl font-semibold tracking-wider mb-6 text-white">FEEL FREE TO CONTACT US<br></br>AND WE ARE AVAILABLE<br></br> AT ANYTIME</h3>
             </div>
           </div>
         </div>
@@ -164,7 +164,7 @@ const Contact = () => {
             {/* Phone Card */}
             <div className="bg-gray-100 rounded-lg p-6 text-center shadow-md">
               <div className="relative inline-block">
-                <FaPhone className="mx-auto h-12 w-12 text-gray-300 mb-4" style={{ filter: 'invert(1)' , transform: "rotate(90deg)" }} /> {/* Inverted Phone icon */}
+                <FaPhone className="mx-auto h-10 w-10 text-gray-300 mb-4" style={{ filter: 'invert(1)' , transform: "rotate(90deg)" }} /> {/* Inverted Phone icon */}
                 <div className="absolute inset-0 opacity-50 rounded-full -z-10"></div>
               </div>
               <h4 className="text-lg font-semibold mb-2">Customer Care No.</h4>
